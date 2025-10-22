@@ -35,6 +35,8 @@ namespace BankingApp
         private static void SendPendingTransactions(Object? source, ElapsedEventArgs time)
         {
             Console.WriteLine($"Pending transactions have been carried out at {time.SignalTime}");
+
+            //TODO Make sure this isn't run in creating the Transaction
             foreach (var transaction in PendingTransactions)
             {
                 Console.WriteLine(transaction);

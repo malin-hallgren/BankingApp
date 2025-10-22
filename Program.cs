@@ -4,12 +4,6 @@
     {
         static void Main(string[] args)
         {
-            BankApp.SetTimer();
-            while (true)
-            {
-                
-                Console.ReadLine();
-            }
             
         }
     }

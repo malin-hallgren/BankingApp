@@ -11,7 +11,7 @@ namespace BankingApp
     internal class BankApp
     {
         public List<BasicUser> Users;
-        private List<Transaction> PendingTransactions;
+        //private List<Transaction> PendingTransactions;
         private static System.Timers.Timer _transactionTimer = new System.Timers.Timer(15 * 60000);
         public static decimal TransactionSum;
 
@@ -37,14 +37,14 @@ namespace BankingApp
             Console.WriteLine($"Pending transactions have been carried out at {time.SignalTime}");
 
             //TODO Make sure this isn't run in creating the Transaction
-            foreach (var transaction in PendingTransactions)
-            {
-                Console.WriteLine(transaction);
-                transaction.From.Balance -= transaction.Amount;
-                transaction.To.Balance += transaction.Amount;
-                transaction.Date = time.SignalTime;
-                TransactionSum += transaction.Amount;
-            }
+            //foreach (var transaction in PendingTransactions)
+            //{
+            //    Console.WriteLine(transaction);
+            //    transaction.From.Balance -= transaction.Amount;
+            //    transaction.To.Balance += transaction.Amount;
+            //    transaction.Date = time.SignalTime;
+            //    TransactionSum += transaction.Amount;
+            //}
         }
     }
 }

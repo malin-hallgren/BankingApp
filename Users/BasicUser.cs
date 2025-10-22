@@ -8,5 +8,6 @@ namespace BankingApp.Users
 {
     internal class BasicUser
     {
+        public static string FilePath { get; private set; } = "BasicUserList.json";
     }
 }

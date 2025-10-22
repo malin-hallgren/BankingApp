@@ -9,8 +9,6 @@ namespace BankingApp.Users
     // should we make this class abstract?
     internal class BasicUser
     {
-
-
         // Properties
         public static string FilePath { get; private set; } = "BasicUserList.json";
         public string UserName { get; set; }

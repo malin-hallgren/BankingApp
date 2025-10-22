@@ -4,7 +4,13 @@
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            BankApp.SetTimer();
+            while (true)
+            {
+                
+                Console.ReadLine();
+            }
+            
         }
     }
 }

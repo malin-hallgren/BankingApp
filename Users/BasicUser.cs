@@ -9,6 +9,7 @@ namespace BankingApp.Users
     // should we make this class abstract?
     internal class BasicUser
     {
+        // Properties
         public string UserName { get; set; }
         public string Name { get; set; }
         public string PhoneNumber { get; set; }

@@ -44,7 +44,7 @@ namespace BankingApp.Users
 
         public Account OpenAccount(string guid, decimal balance, string currency, User owner)
         {
-            return new Account();
+            return new Account(guid, balance, currency, owner);
         }
     }
 }

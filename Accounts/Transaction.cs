@@ -20,7 +20,7 @@ namespace BankingApp.Accounts
             Amount = amount;
             Date = date;
             From = from;
-            TO = to;
+            To = to;
 
         }
 

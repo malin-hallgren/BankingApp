@@ -5,13 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using BankingApp.Users;
+using BankingApp.Accounts;
 
 namespace BankingApp
 {
     internal class BankApp
     {
-        public List<BasicUser> Users;
-        //private List<Transaction> PendingTransactions;
+        public static List<BasicUser> Users = new List<BasicUser>();
+        private static List<Transaction> PendingTransactions = new List<Transaction>();
         private static System.Timers.Timer _transactionTimer = new System.Timers.Timer(15 * 60000);
         public static decimal TransactionSum;
 
@@ -34,9 +35,10 @@ namespace BankingApp
         /// <param name="time">Data for the ElapsedEvent from the timer, in this case, just a time</param>
         private static void SendPendingTransactions(Object? source, ElapsedEventArgs time)
         {
-            Console.WriteLine($"Pending transactions have been carried out at {time.SignalTime}");
 
-            //TODO Make sure this isn't run in creating the Transaction
+            //TODO_MH: Make sure this isn't run in creating the Transaction
+            //Deducts and adds funds in from and to accouts, sets correct time for transaction
+            //and adds amount of transaction to the total, TransactionSum
             //foreach (var transaction in PendingTransactions)
             //{
             //    Console.WriteLine(transaction);
@@ -45,6 +47,14 @@ namespace BankingApp
             //    transaction.Date = time.SignalTime;
             //    TransactionSum += transaction.Amount;
             //}
+
+            string message = $"The following transactions have been carried out at {time.SignalTime}";
+            foreach (var transaction in PendingTransactions)
+            {
+                Console.WriteLine(transaction);
+            } //How do we want to display this? Thinking a log for the admin, select the date, and upon selecting the time a list of the transactions?
+
+            PendingTransactions.Clear();
         }
     }
 }

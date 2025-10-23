@@ -9,7 +9,7 @@ namespace BankingApp.Users
         private List<Account>? accountList;
         //private List<Log>? logList;
 
-       // private List<Loan>? loanList;
+        // private List<Loan>? loanList;
         public bool IsBlocked { get; set; }
 
         public uint CreditScore { get; set; }
@@ -24,7 +24,7 @@ namespace BankingApp.Users
 
         public void PrintActionLog()
         {
-            
+
         }
 
         public void PrintAccounts()

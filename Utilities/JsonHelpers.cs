@@ -29,10 +29,10 @@ namespace BankingApp.Utilities
                     {
                         TypeDiscriminatorPropertyName = $"type",
                         IgnoreUnrecognizedTypeDiscriminators = false,
-                        DerivedTypes = //TODO uncomment once Admin and User are both in
+                        DerivedTypes = 
                         {
-                            //new JsonDerivedType(typeof(User), nameof(User)),
-                            //new JsonDerivedType(typeof(Admin), nameof(Admin))
+                            new JsonDerivedType(typeof(User), nameof(User)),
+                            //new JsonDerivedType(typeof(Admin), nameof(Admin)) TODO_MH: uncomment once Admin class is in
                         }
                     };
                 }

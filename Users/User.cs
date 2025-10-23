@@ -36,15 +36,15 @@ namespace BankingApp.Users
 
         }
 
-      /*  TODO: Implement
-       *  public Loan RequestLoan()
-        {
-            return;
-        }*/
+        /*  TODO: Implement
+         *  public Loan RequestLoan()
+          {
+              return;
+          }*/
 
-        //public Account OpenAccount(string guid, decimal balance, string currency, User owner)
-        //{
-        //    return new Account();
-        //}
+        public Account OpenAccount(string guid, decimal balance, string currency, User owner)
+        {
+            return new Account();
+        }
     }
 }

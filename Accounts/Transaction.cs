@@ -13,7 +13,7 @@ namespace BankingApp.Accounts
         public decimal Amount { get; set; }
         public DateTime Date { get; set; }
         public Account From { get; set; }
-        public Account TO { get; set; }
+        public Account To { get; set; }
 
         public Transaction(decimal amount, DateTime date, Account from, Account to)
         {
@@ -31,7 +31,7 @@ namespace BankingApp.Accounts
 
         public override string ToString()
         {
-            return $"Amount: {Amount} | Date {Date} | From {From} | To {TO}";
+            return $"Amount: {Amount} | Date {Date} | From {From} | To {To}";
         }
 
 

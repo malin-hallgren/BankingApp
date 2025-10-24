@@ -14,7 +14,7 @@ namespace BankingApp.Users
 
         public uint CreditScore { get; set; }
 
-        public User(string userName, string name, string phoneNumber, string emailAddress, string password, bool isAdmin, bool isBlocked, uint creditScore) : base(userName, name, phoneNumber, emailAddress, password, isAdmin)
+        public User(string userName, string name, string phoneNumber, string emailAddress, string password, bool isBlocked, uint creditScore) : base(userName, name, phoneNumber, emailAddress, password)
         {
             accountList = new List<Account>();
             //loanList = new LoanList();

@@ -21,7 +21,6 @@ namespace BankingApp.Users
         /// <param name="users">Expects a list of BasicUser objects</param>
         public void ListUsers()
         {
-
             List<BasicUser> users = BankApp.GetUserList();
             foreach (var user in users)
             {
@@ -35,6 +34,8 @@ namespace BankingApp.Users
         public void CreateUser(string userName, string name, string phoneNumber, string emailAddress, string password, uint creditScore)
         {
             User newUser = new User(userName, name, phoneNumber, emailAddress, password, isBlocked: false, creditScore);
+            BankApp.AddUserToList(newUser);
         }
+
     }
 }

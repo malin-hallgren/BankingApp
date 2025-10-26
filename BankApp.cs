@@ -26,7 +26,16 @@ namespace BankingApp
             return new List<BasicUser>(Users);
         }
 
-          /// <summary>
+        /// <summary>
+        /// Adds a user to the Users list
+        /// </summary>
+        /// <param name="user"></param>
+        public static void AddUserToList(BasicUser user)
+        {
+            Users.Add(user);
+        }
+
+        /// <summary>
         /// Uses a hardcoded 15 minute timer to run OnTimedEvent, automatically resets upon completion
         /// </summary>
         public static void SetTransactionTimer()

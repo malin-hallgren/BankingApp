@@ -1,4 +1,5 @@
-﻿using BankingApp.Utilities;
+﻿using BankingApp.Users;
+using BankingApp.Utilities;
 
 namespace BankingApp
 {

@@ -11,11 +11,29 @@ namespace BankingApp
 {
     internal class BankApp
     {
-        public static List<BasicUser> Users = new List<BasicUser>();
+        private static List<BasicUser> Users = new List<BasicUser>();
         private static List<Transaction> PendingTransactions = new List<Transaction>();
         private static System.Timers.Timer _transactionTimer = new System.Timers.Timer(15 * 60000);
         public static decimal TransactionSum;
 
+        /// <summary>
+        /// Retrieves a list of all basic users.
+        /// </summary>
+        /// <returns>Returns a copy of the list <see cref="BasicUser"/> to prevent the external code from modifying the entire list
+        /// present.</returns>
+        public static List<BasicUser> GetUserList()
+        {
+            return new List<BasicUser>(Users);
+        }
+
+        /// <summary>
+        /// Adds a user to the Users list
+        /// </summary>
+        /// <param name="user"></param>
+        public static void AddUserToList(BasicUser user)
+        {
+            Users.Add(user);
+        }
 
         /// <summary>
         /// Uses a hardcoded 15 minute timer to run OnTimedEvent, automatically resets upon completion

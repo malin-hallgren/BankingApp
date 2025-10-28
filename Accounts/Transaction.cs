@@ -10,19 +10,21 @@ namespace BankingApp.Accounts
 {
     internal class Transaction
     {
-        //public uint TransactionID {get; set;}
-        //public string TransactionMessage {get; set;}
+        public Guid TransactionID {get; set;}
+        public string TransactionMessage {get; set;}
         public decimal Amount { get; set; }
         public DateTime Date { get; set; }
         public Account From { get; set; }
         public Account To { get; set; }
 
-        public Transaction(decimal amount, DateTime date, Account from, Account to)
+        public Transaction(decimal amount, string message, DateTime date, Account from, Account to)
         {
             Amount = amount;
+            TransactionMessage = message;
             Date = date;
             From = from;
             To = to;
+            TransactionID = Guid.NewGuid();
 
         }
 
@@ -85,7 +87,7 @@ namespace BankingApp.Accounts
 
         public override string ToString()
         {
-            return $"Amount: {Amount} | Date {Date} | From {From} | To {To}";
+            return $"Amount: {Amount} | Message: {TransactionMessage} | Date {Date} | From {From} | To {To}";
         }
 
 

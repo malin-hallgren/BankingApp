@@ -2,9 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using MailKit;
+using MailKit.Net.Smtp;
+using MailKit.Security;
+using MimeKit;
 
 namespace BankingApp.Accounts
 {
@@ -26,7 +29,7 @@ namespace BankingApp.Accounts
 
         }
 
-        public void SendMail(string mailText)
+        public void SendMail()
         {
             // TODO : Add implementation 
 
@@ -36,51 +39,54 @@ namespace BankingApp.Accounts
             //carry over to anyone downloading it, and would then normally be set server side if this was published... but it works 
             //locally for us like this at least :'). Feel free to delete if we do not want this /MH
 
-            //string? smtpUser = Environment.GetEnvironmentVariable("SMTP2GO_USER");
-            //string? smtpPass = Environment.GetEnvironmentVariable("SMTP2GO_PASS");
+            string[] auth = File.ReadAllLines("../../../Utilities/Environment.env");
 
-            //var message = new MimeMessage();
+            string? smtpUser = auth[0];
+            string? smtpPass = auth[1];
 
-            //try
-            //{
-            //    message.From.Add(new MailboxAddress("Knock-Off Bank", smtpUser));
-            //    message.To.Add(MailboxAddress.Parse(user.Email));
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine($"Something went wrong with the email addresses: {ex.Message}");
-            //}
+            var message = new MimeMessage();
+
+            try
+            {
+                message.From.Add(new MailboxAddress("*REDACTED* Bank", smtpUser));
+                message.To.Add(MailboxAddress.Parse(To.Owner.EmailAddress));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Something went wrong with the email addresses: {ex.Message}");
+            }
 
 
-            //message.Subject = $"{user.Name} please check your account";
-            //message.Body = new TextPart("plain")
-            //{
-            //    mailText;
-            //};
+            message.Subject = $"{To.Owner.Name} please check your account";
+            message.Body = new TextPart("plain")
+            {
+               Text = "Lol hej"
+            };
 
-            //using (var client = new SmtpClient())
-            //{
-            //    try
-            //    {
-            //        client.Connect("mail.smtp2go.com", 8465, SecureSocketOptions.SslOnConnect);
-            //        client.Authenticate(smtpUser, smtpPass);
+            using (var client = new SmtpClient())
+            {
+                try
+                {
+                    client.Connect("mail.smtp2go.com", 8465, SecureSocketOptions.SslOnConnect);
+                    client.Authenticate(smtpUser, smtpPass);
 
-            //        client.Send(message);
-            //        client.Disconnect(true);
-            //        Console.WriteLine("Message sent!");
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        Console.WriteLine($"Something went wrong: {ex.Message}");
-            //        Console.WriteLine("No message was sent.");
+                    client.Send(message);
+                    client.Disconnect(true);
+                    Console.WriteLine("Message sent!");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Something went wrong: {ex.Message}");
+                    Console.WriteLine("No message was sent.");
 
-            //        if (smtpUser == null || smtpPass == null)
-            //        {
-            //            Console.WriteLine("Check your environment variables? Have they been set? Right click project -> Properties -> Debug and set them");
-            //            
-            //        }
-            //    }
-            //};
+                    if (smtpUser == null || smtpPass == null)
+                    {
+                        Console.WriteLine("Check your environment file, is it complete?");
+
+                    }
+                }
+            }
+            ;
         }
 
         public override string ToString()

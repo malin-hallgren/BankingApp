@@ -17,7 +17,7 @@ namespace BankingApp.Accounts
         public Account From { get; set; }
         public Account To { get; set; }
 
-        public Transaction(decimal amount, string message, DateTime date, Account from, Account to)
+        public Transaction(decimal amount, DateTime date, Account from, Account to, string message = "")
         {
             Amount = amount;
             TransactionMessage = message;
@@ -25,7 +25,6 @@ namespace BankingApp.Accounts
             From = from;
             To = to;
             TransactionID = Guid.NewGuid();
-
         }
 
         public void SendMail(string mailText)
@@ -84,6 +83,19 @@ namespace BankingApp.Accounts
             //    }
             //};
         }
+
+        public void ExecuteTransfer()
+        {
+            To.Balance += Amount;
+            From.Balance -= Amount;
+        }
+
+        public void AddToPendinglist()
+        {
+           // BankApp.PendingTransactions.Add(this);
+
+        }
+         
 
         public override string ToString()
         {

@@ -32,7 +32,7 @@ namespace BankingApp.Utilities
                         DerivedTypes = 
                         {
                             new JsonDerivedType(typeof(User), nameof(User)),
-                            //new JsonDerivedType(typeof(Admin), nameof(Admin)) TODO_MH: uncomment once Admin class is in
+                            new JsonDerivedType(typeof(Admin), nameof(Admin))
                         }
                     };
                 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BankingApp.Utilities
 {
-    internal class OutPutHelpers
+    internal class OutputHelpers
     {
     }
 }

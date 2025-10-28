@@ -26,5 +26,32 @@ namespace BankingApp.Users
             EmailAddress = emailAddress;
             Password = password;
         }
+
+        public override string ToString()
+        {
+            return $"Name: {Name}\nUsername: {UserName}\nPhone Number: {PhoneNumber}\nEmail Address: {EmailAddress}";
+        }
+
+        public static string GenerateUsername(User user)
+        {
+            string[] parts = user.Name.Trim().Split(' ');
+            string userName = " ";
+            
+            foreach (var name in parts)
+            {
+                userName += name.ToLower().Substring(0, 2);
+            }
+
+            userName = userName.Trim();
+
+            List<BasicUser> currentUsers = BankApp.GetUserList();
+            List<BasicUser> matchingUsers = currentUsers.Where(x => x.UserName.StartsWith(userName)).ToList();
+
+
+            int indexer = matchingUsers.Count + 1;
+            userName = userName + indexer.ToString();
+
+            return userName;
+        }
     }
 }

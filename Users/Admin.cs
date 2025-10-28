@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BankingApp.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,10 +32,36 @@ namespace BankingApp.Users
             }
         }
 
-        public void CreateUser(string userName, string name, string phoneNumber, string emailAddress, string password, uint creditScore)
+        public static  void CreateUser()
         {
-            User newUser = new User(userName, name, phoneNumber, emailAddress, password, isBlocked: false, creditScore);
+            List<string> fields = new List<string>() {"Name:", "Username:", "Phone number:", "Email address:", "Password:" };
+            User newUser = new User("", "", "", "", "", false, 0);
+
+
+            foreach (var field in fields)
+            {
+                Console.WriteLine(field);
+            }
+
+            Console.SetCursorPosition(20, 0);
+            newUser.Name = InputHelpers.ValidString();
+
+            newUser.UserName = GenerateUsername(newUser);
+            Console.SetCursorPosition(20, 1);
+            Console.WriteLine(newUser.UserName);
+
+            Console.SetCursorPosition(20, 2);
+            newUser.PhoneNumber = InputHelpers.ValidString();
+
+            Console.SetCursorPosition(20, 3);
+            newUser.EmailAddress = InputHelpers.ValidString();
+
+            Console.SetCursorPosition(20, 4);
+            newUser.Password = InputHelpers.ValidString();
+
             BankApp.AddUserToList(newUser);
+
+            Console.Clear();
         }
 
     }

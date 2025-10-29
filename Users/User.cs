@@ -8,8 +8,7 @@ namespace BankingApp.Users
     {
         private List<Account>? accountList;
         //private List<Log>? logList;
-
-        // private List<Loan>? loanList;
+        public  List<Loan>? LoanList { get; set; }
         public bool IsBlocked { get; set; }
 
         public uint CreditScore { get; set; }
@@ -17,7 +16,7 @@ namespace BankingApp.Users
         public User(string userName, string name, string phoneNumber, string emailAddress, string password, bool isBlocked, uint creditScore) : base(userName, name, phoneNumber, emailAddress, password)
         {
             accountList = new List<Account>();
-            //loanList = new LoanList();
+            LoanList = new List<Loan>();
             IsBlocked = isBlocked;
             CreditScore = creditScore;
         }

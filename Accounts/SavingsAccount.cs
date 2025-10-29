@@ -11,8 +11,8 @@ namespace BankingApp.Accounts
     {
         public decimal Interest { get; set; }
 
-        public SavingsAccount(string accountNumber, decimal balance, string currency, User owner, decimal interest)
-            : base(accountNumber, balance, currency, owner)
+        public SavingsAccount(string currency, User owner, decimal interest = 0, decimal balance = 0)
+            : base(currency, owner, balance)
         {
             Interest = interest;
         }

@@ -1,4 +1,5 @@
 ﻿using BankingApp.Accounts;
+using Org.BouncyCastle.Bcpg;
 using System.Net.Mail;
 using System.Xml.Linq;
 
@@ -6,7 +7,7 @@ namespace BankingApp.Users
 {
     internal class User : BasicUser
     {
-        private List<Account>? accountList;
+        private List<Account> accountList;
         //private List<Log>? logList;
         public  List<Loan>? LoanList { get; set; }
         public bool IsBlocked { get; set; }
@@ -41,9 +42,18 @@ namespace BankingApp.Users
               return;
           }*/
 
-        public Account OpenAccount(string guid, decimal balance, string currency, User owner)
+        public void OpenAccount(string accountType, string currency)
         {
-            return new Account(guid, balance, currency, owner);
+            if (accountType.ToLower().Equals("savings"))
+            {
+                accountList.Add(new SavingsAccount(currency, this));
+            }
+            else
+            {
+                accountList.Add(new Account(currency, this));
+            }
         }
+
+            //user.GetType() == typeof(User)
     }
 }

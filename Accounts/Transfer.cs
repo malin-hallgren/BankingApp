@@ -28,7 +28,7 @@ namespace BankingApp.Accounts
             From = from;
             To = to;
             TransactionID = Guid.NewGuid();
-            BankApp.AddToList(this);
+            BankApp.AddToTransferList(this);
         }
 
         public void SendMail()

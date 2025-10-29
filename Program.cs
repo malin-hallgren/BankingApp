@@ -10,8 +10,9 @@ namespace BankingApp
         {
             
             BankApp.Startup();
-            Console.ReadLine();
             
+            BankApp.LogInCheck();
+            Console.ReadLine();
             BankApp.Exit();
         }
     }

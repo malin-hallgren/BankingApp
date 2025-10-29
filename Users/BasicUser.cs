@@ -29,7 +29,7 @@ namespace BankingApp.Users
 
         public override string ToString()
         {
-            return $"Name: {Name}\nUsername: {UserName}\nPhone Number: {PhoneNumber}\nEmail Address: {EmailAddress}";
+            return $"Name: {Name}\nUsername: {UserName}\nPhone Number: {PhoneNumber}\nEmail Address: {EmailAddress}\nPassword: {Password}";
         }
 
         public static string GenerateUsername(User user)

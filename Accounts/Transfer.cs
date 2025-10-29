@@ -11,7 +11,7 @@ using MimeKit;
 
 namespace BankingApp.Accounts
 {
-    internal class Transaction
+    internal class Transfer
     {
         public Guid TransactionID {get; set;}
         public string TransactionMessage {get; set;}
@@ -20,7 +20,7 @@ namespace BankingApp.Accounts
         public Account From { get; set; }
         public Account To { get; set; }
 
-        public Transaction(decimal amount, DateTime date, Account from, Account to, string message = "")
+        public Transfer(decimal amount, DateTime date, Account from, Account to, string message = "")
         {
             Amount = amount;
             TransactionMessage = message;
@@ -28,6 +28,7 @@ namespace BankingApp.Accounts
             From = from;
             To = to;
             TransactionID = Guid.NewGuid();
+            BankApp.AddToList(this);
         }
 
         public void SendMail()
@@ -95,14 +96,7 @@ namespace BankingApp.Accounts
             To.Balance += Amount;
             From.Balance -= Amount;
         }
-
-        public void AddToPendinglist()
-        {
-           // BankApp.PendingTransactions.Add(this);
-
-        }
          
-
         public override string ToString()
         {
             return $"Amount: {Amount} | Message: {TransactionMessage} | Date {Date} | From {From} | To {To}";

@@ -8,7 +8,11 @@ namespace BankingApp
     {
         static void Main(string[] args)
         {
-            AsciiHelpers.PrintAscii(AsciiHelpers.LogoPath);
+            
+            BankApp.Startup();
+            Console.ReadLine();
+            
+            BankApp.Exit();
         }
     }
 }

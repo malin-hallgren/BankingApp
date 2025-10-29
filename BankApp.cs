@@ -6,15 +6,19 @@ using System.Threading.Tasks;
 using System.Timers;
 using BankingApp.Users;
 using BankingApp.Accounts;
+using BankingApp.Utilities;
 
 namespace BankingApp
 {
     internal class BankApp
     {
+        private static readonly string _filePathUsers = "BasicUserList.json";
         private static List<BasicUser> Users = new List<BasicUser>();
-        private static List<Transaction> PendingTransactions = new List<Transaction>();
-        private static System.Timers.Timer _transactionTimer = new System.Timers.Timer(15 * 60000);
-        public static decimal TransactionSum;
+
+        private static List<Transfer> PendingTransfer = new List<Transfer>();
+
+        private static System.Timers.Timer _transferTimer = new System.Timers.Timer(15 * 60000);
+        public static decimal TransferSum;
 
         /// <summary>
         /// Retrieves a list of all basic users.
@@ -24,6 +28,84 @@ namespace BankingApp
         public static List<BasicUser> GetUserList()
         {
             return new List<BasicUser>(Users);
+        }
+
+
+        /// <summary>
+        /// Alternative Get List method that allows for use with both Users and Pending Transactions
+        /// </summary>
+        /// <typeparam name="T">The type of the List you wish to access. Currently supports BasicUser and Transfer</typeparam>
+        /// <returns>A copy of the list corresponding to the passed type</returns>
+        public static List<T> GetList<T>()
+        {
+            if (typeof(T).IsAssignableFrom(typeof(BasicUser)))
+            {
+                var toReturn = new List<BasicUser>(Users);
+                return new List<T>((List<T>)(object)toReturn);
+            }
+
+            else if (typeof(T).IsAssignableFrom(typeof(Transfer)))
+            {
+                var toReturn = new List<Transfer>(PendingTransfer);
+                return new List<T>((List<T>)(object)toReturn);
+            }
+            else
+            {
+                Console.WriteLine("No applicable list found, returning empty, generic list");
+                return new List<T>();
+            }
+        }
+
+        /// <summary>
+        /// Sets variables at their start state, loads needed files
+        /// </summary>
+        public static void Startup()
+        {
+            Users = JsonHelpers.LoadList<BasicUser>(_filePathUsers);
+            // We need to save a transaction log, and the sum, and boot them here too
+            AsciiHelpers.PrintAscii(AsciiHelpers.LogoPath);
+        }
+
+        /// <summary>
+        /// Exits the application, saving neccessary files and prints goodbye message
+        /// </summary>
+        public static void Exit()
+        {
+            Console.Clear();
+            JsonHelpers.SaveList(Users, _filePathUsers);
+            Console.WriteLine("Thank you for using *REDACTED* Bank! We look forward to your next visit!");
+            Environment.Exit(0);
+        }
+
+        /// <summary>
+        /// Alternative Add method usable for both PendingTransactions and Users list (and any others we may add)
+        /// </summary>
+        /// <typeparam name="T">The type of object you wish to add, currently supports BasicUser(and subclasses) and Transfer</typeparam>
+        /// <param name="toAdd">The specific object of the aforementioned types you wish to add</param>
+        public static void AddToList<T>(T toAdd)
+        {
+            if(toAdd is BasicUser)
+            {
+                if (toAdd is User)
+                {
+                    var user = toAdd as User;
+                    Users.Add(user);
+                }
+                else
+                {
+                    var admin = toAdd as Admin;
+                    Users.Add(admin);
+                }
+
+                JsonHelpers.SaveList(Users, _filePathUsers);
+                Console.WriteLine($"{toAdd} was added to the Users list");
+            }
+            else if(toAdd is Transfer)
+            {
+                var transfer = toAdd as Transfer;
+                PendingTransfer.Add(transfer);
+                Console.WriteLine($"{toAdd} was added to the Pending Transactions list");
+            }
         }
 
         /// <summary>
@@ -40,9 +122,9 @@ namespace BankingApp
         /// </summary>
         public static void SetTransactionTimer()
         {
-            _transactionTimer.Elapsed += SendPendingTransactions;
-            _transactionTimer.AutoReset = true;
-            _transactionTimer.Enabled = true;
+            _transferTimer.Elapsed += SendPendingTransactions;
+            _transferTimer.AutoReset = true;
+            _transferTimer.Enabled = true;
         }
 
         /// <summary>
@@ -53,26 +135,21 @@ namespace BankingApp
         /// <param name="time">Data for the ElapsedEvent from the timer, in this case, just a time</param>
         private static void SendPendingTransactions(Object? source, ElapsedEventArgs time)
         {
-
-            //TODO_MH: Make sure this isn't run in creating the Transaction
-            //Deducts and adds funds in from and to accouts, sets correct time for transaction
-            //and adds amount of transaction to the total, TransactionSum
-            //foreach (var transaction in PendingTransactions)
-            //{
-            //    Console.WriteLine(transaction);
-            //    transaction.From.Balance -= transaction.Amount;
-            //    transaction.To.Balance += transaction.Amount;
-            //    transaction.Date = time.SignalTime;
-            //    TransactionSum += transaction.Amount;
-            //}
+            foreach (var transfer in PendingTransfer)
+                {
+                    Console.WriteLine(transfer);
+                    transfer.ExecuteTransfer();
+                    transfer.Date = time.SignalTime;
+                    TransferSum += transfer.Amount;
+                }
 
             string message = $"The following transactions have been carried out at {time.SignalTime}";
-            foreach (var transaction in PendingTransactions)
+            foreach (var transfer in PendingTransfer)
             {
-                Console.WriteLine(transaction);
+                Console.WriteLine(transfer);
             } //How do we want to display this? Thinking a log for the admin, select the date, and upon selecting the time a list of the transactions?
 
-            PendingTransactions.Clear();
+            PendingTransfer.Clear();
         }
     }
 }

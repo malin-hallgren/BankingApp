@@ -10,7 +10,7 @@ namespace BankingApp.Users
     internal class BasicUser
     {
         // Properties
-        public static string FilePath { get; private set; } = "BasicUserList.json";
+        
         public string UserName { get; set; }
         public string Name { get; set; }
         public string PhoneNumber { get; set; }

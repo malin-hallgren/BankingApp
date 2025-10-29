@@ -59,7 +59,7 @@ namespace BankingApp.Users
             Console.SetCursorPosition(20, 4);
             newUser.Password = InputHelpers.ValidString();
 
-            BankApp.AddUserToList(newUser);
+            BankApp.AddToList(newUser);
 
             Console.Clear();
         }

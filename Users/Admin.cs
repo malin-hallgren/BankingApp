@@ -57,11 +57,13 @@ namespace BankingApp.Users
             newUser.EmailAddress = InputHelpers.ValidString();
 
             Console.SetCursorPosition(20, 4);
-            newUser.Password = InputHelpers.ValidString();
+            newUser.Password = BankApp.PasswordHash(newUser, InputHelpers.ValidString());
 
-            BankApp.AddToList(newUser);
+            BankApp.AddToUserList(newUser);
 
             Console.Clear();
+
+      
         }
 
     }

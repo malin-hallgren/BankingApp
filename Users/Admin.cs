@@ -60,7 +60,7 @@ namespace BankingApp.Users
 
             newUser.Password = BasicUser.PasswordHash(newUser, InputHelpers.ValidString());
 
-            BankApp.AddUserToList(newUser);
+            BankApp.AddToUserList(newUser);
 
 
             Console.Clear();

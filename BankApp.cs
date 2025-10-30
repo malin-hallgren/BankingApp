@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using System.Timers;
 using BankingApp.Users;
 using BankingApp.Accounts;
 using BankingApp.Utilities;
+using System.Runtime.CompilerServices;
 
 namespace BankingApp
 {
@@ -14,21 +16,11 @@ namespace BankingApp
     {
         private static readonly string _filePathUsers = "BasicUserList.json";
         private static List<BasicUser> Users = new List<BasicUser>();
-
         private static List<Transfer> PendingTransfer = new List<Transfer>();
-
         private static System.Timers.Timer _transferTimer = new System.Timers.Timer(15 * 60000);
+        private static PasswordHasher<BasicUser> Hasher {  get; set; } = new PasswordHasher<BasicUser>();
         public static decimal TransferSum;
 
-        /// <summary>
-        /// Retrieves a list of all basic users.
-        /// </summary>
-        /// <returns>Returns a copy of the list <see cref="BasicUser"/> to prevent the external code from modifying the entire list
-        /// present.</returns>
-        public static List<BasicUser> GetUserList()
-        {
-            return new List<BasicUser>(Users);
-        }
 
         /// <summary>
         /// Sets variables at their start state, loads needed files
@@ -66,12 +58,34 @@ namespace BankingApp
         }
 
         /// <summary>
+
+        /// Retrieves a list of all basic users.
+        /// </summary>
+        /// <returns>Returns a copy of the list <see cref="BasicUser"/> to prevent the external code from modifying the entire list
+        /// present.</returns>
+        public static List<BasicUser> GetUserList()
+        {
+            return new List<BasicUser>(Users);
+        }
+
+        /// <summary>
         /// Adds a user to the Users list
         /// </summary>
         /// <param name="user"></param>
-        public static void AddUserToList(BasicUser user)
+        public static void AddToUserList(BasicUser user)
         {
             Users.Add(user);
+            JsonHelpers.SaveList(Users, _filePathUsers);
+        }
+
+        public static List<Transfer> GetTransferList()
+        {
+            return new List<Transfer>(PendingTransfer);
+        }
+
+        public static void AddToTransferList(Transfer transfer)
+        {
+            PendingTransfer.Add(transfer);
         }
 
         /// <summary>
@@ -108,7 +122,6 @@ namespace BankingApp
 
             PendingTransfer.Clear();
         }
-                       
 
         [Obsolete("Asked more senior programmer, this is more hassle than it is worth. Use specific getters GetUserList, GetTransferList")]
         /// <summary>

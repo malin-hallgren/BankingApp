@@ -11,8 +11,6 @@ namespace BankingApp
             
             BankApp.Startup();
 
-            
-            
             (BasicUser?, bool) loginData = BasicUser.LogInCheck();
             var currentUser = BasicUser.GetUserType(loginData.Item1);
 

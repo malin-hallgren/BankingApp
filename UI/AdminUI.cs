@@ -1,11 +1,12 @@
 ﻿using BankingApp.Utilities;
+using BankingApp.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BankingApp.Menus
+namespace BankingApp.UI
 {
     internal class AdminUI
     {
@@ -18,7 +19,8 @@ namespace BankingApp.Menus
                 "Create new user",
                 "Display all users",
                 "Update currencies",
-                "Update Interest Rates"
+                "Update Interest Rates",
+                "Log out"
             };
 
             Menu menu = new Menu(prompt, options);
@@ -27,20 +29,38 @@ namespace BankingApp.Menus
             switch (selectedIndex)
             {
                 case 0:
-                    // Create new user
+                    Console.Clear();
+                    Admin.CreateUser();
+                    Start();
                     break;
 
                 case 1:
-                    // Display all users
+                    Console.Clear();
+                    List<BasicUser> users = BankApp.GetUserList();
+                    OutputHelpers.PrintList(users);
+                    Console.ReadLine();
+                    Start();
                     break;
 
                 case 2:
+                    Console.Clear();
+                    Console.WriteLine("Update Currencies - Coming soon!");
+                    Console.ReadLine();
+                    Start();
                     // Update currencies
                     break;
 
                 case 3:
+                    Console.Clear();
+                    Console.WriteLine("Update Interest Rates - Coming soon!");
+                    Console.ReadLine();
+                    Start();
                     // Update Interest Rates
                     break;
+                case 4:
+                    Console.Clear();
+                    Console.WriteLine("Logged out successfully. Please log in again");
+                    return;
 
                 default:
                     // If error somehow

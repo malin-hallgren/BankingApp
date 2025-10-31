@@ -1,6 +1,7 @@
 ﻿using BankingApp.Users;
 using BankingApp.Utilities;
 using BankingApp.Accounts;
+using BankingApp.UI;
 
 namespace BankingApp
 {
@@ -11,15 +12,31 @@ namespace BankingApp
             
             BankApp.Startup();
 
-            (BasicUser?, bool) loginData = BasicUser.LogInCheck();
-            var currentUser = BasicUser.GetUserType(loginData.Item1);
-
-            if (currentUser != null && loginData.Item2 == true)
+            while (BankApp.IsRunning)
             {
-                //Run menu for appropriate type of user here. User/Admin
-            }
+                (BasicUser?, bool) loginData = Login.Start();
+                
+                if (loginData.Item2)
+                {
+                    var currentUser = loginData.Item1;
 
-            Console.WriteLine($"Login succeeded? {loginData.Item2}. As {currentUser}");
+                    if (currentUser != null)
+                    {
+                        if (currentUser is Admin)
+                        {
+                            var admin = currentUser as Admin;
+                            AdminUI.Start();
+                        }
+                        else
+                        {
+                            var user = currentUser as User;
+                            CustomerUI.Start(user);
+                        }
+                    }
+                }
+                
+            }
+            
 
             Console.ReadLine();
             BankApp.Exit();

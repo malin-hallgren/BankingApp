@@ -60,6 +60,7 @@ namespace BankingApp.Utilities
 
         public int Run()
         {
+            Console.CursorVisible = false;
 
             ConsoleKey keyPressed = 0;
 
@@ -95,6 +96,8 @@ namespace BankingApp.Utilities
                     }
                 }
             }
+
+            Console.CursorVisible = true;
             // Returns the index of the selected option when Enter is pressed (perfect for switch cases)
             return SelectedIndex;
         }

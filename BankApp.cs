@@ -20,6 +20,7 @@ namespace BankingApp
         private static System.Timers.Timer _transferTimer = new System.Timers.Timer(15 * 60000);
         private static PasswordHasher<BasicUser> Hasher {  get; set; } = new PasswordHasher<BasicUser>();
         public static decimal TransferSum;
+        public static bool IsRunning { get; private set; }
 
 
         /// <summary>
@@ -27,6 +28,8 @@ namespace BankingApp
         /// </summary>
         public static void Startup()
         {
+            IsRunning = true;
+
             Users = JsonHelpers.LoadList<BasicUser>(_filePathUsers);
 
             if(!Users.Exists(x => x.GetType() == typeof(Admin)))
@@ -51,6 +54,7 @@ namespace BankingApp
         /// </summary>
         public static void Exit()
         {
+            IsRunning = false;
             Console.Clear();
             JsonHelpers.SaveList(Users, _filePathUsers);
             Console.WriteLine("Thank you for using *REDACTED* Bank! We look forward to your next visit!");

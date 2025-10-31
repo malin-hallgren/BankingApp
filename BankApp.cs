@@ -28,6 +28,18 @@ namespace BankingApp
         public static void Startup()
         {
             Users = JsonHelpers.LoadList<BasicUser>(_filePathUsers);
+
+            if(!Users.Exists(x => x.GetType() == typeof(Admin)))
+            {
+                Console.WriteLine("No Admin exists, standard admin user generated. Please set a new password below:");
+                Admin admin = new Admin("Admin", "admin", "587634876538", "admin@redactedbank.se", "dummy");
+                admin.Password = BasicUser.PasswordHash(admin, InputHelpers.ValidString());
+                Users.Add(admin);
+                JsonHelpers.SaveList(Users, _filePathUsers);
+
+                Console.Clear();
+            }
+            
             // We need to save a transaction log, and the sum, and boot them here too
             AsciiHelpers.PrintAscii(AsciiHelpers.LogoPath);
             Console.ReadLine();
@@ -46,6 +58,7 @@ namespace BankingApp
         }
 
         /// <summary>
+
         /// Retrieves a list of all basic users.
         /// </summary>
         /// <returns>Returns a copy of the list <see cref="BasicUser"/> to prevent the external code from modifying the entire list
@@ -108,96 +121,6 @@ namespace BankingApp
             } //How do we want to display this? Thinking a log for the admin, select the date, and upon selecting the time a list of the transactions?
 
             PendingTransfer.Clear();
-        }
-
-        /// <summary>
-        /// Hashes the password entry for a user
-        /// </summary>
-        /// <param name="user">the user for which the password is valid for</param>
-        /// <param name="plainText">password in plain text</param>
-        /// <returns></returns>
-        public static string PasswordHash(BasicUser user, string plainText)
-        {
-            return Hasher.HashPassword(user, plainText);
-        }
-
-        /// <summary>
-        /// Logs in a user unless it is blocked
-        /// </summary>
-        /// <returns>Currently returns a bool, potentially should return the user?</returns>
-        public static bool LogInCheck()
-        {
-            bool ongoingLogin = true;
-            int attempts = 0;
-            var loginStatus = new PasswordVerificationResult();
-            string blockedMessage = $"The account has been blocked due to repeated failed access attempts. Please contact an admin";
-
-            while (ongoingLogin)
-            {
-                Console.WriteLine("Input your username:");
-
-                string username = InputHelpers.ValidString().ToLower();
-                if (Users.Exists(x => x.UserName.Contains(username)))
-                {
-                    var user = Users.Find(x => x.UserName.Contains(username));
-                    Console.Clear();
-
-                    //Break out to method CheckBlock?
-                    if (user is User)
-                    {
-                        User current = (User)user;
-                        if(current.IsBlocked)
-                        {
-                            Console.WriteLine(blockedMessage);
-                            break;
-                        }
-                    }
-
-                    while(ongoingLogin && attempts < 3)
-                    {
-                        Console.WriteLine("Input your password");
-                        string input = InputHelpers.ValidString();
-
-                        attempts++;
-
-                        loginStatus = Hasher.VerifyHashedPassword(user, user.Password, input);
-
-                        if(loginStatus == PasswordVerificationResult.Failed)
-                        {
-                            Console.Clear();
-                            Console.WriteLine($"Incorrect password entered. You have {3 - attempts} attempts left.");
-                            continue;
-                        }
-                        else
-                        {
-                            Console.Clear();
-                            Console.WriteLine($"Welcome to *REDACTED* Bank, {user.Name}");
-                            Console.ReadLine();
-                            ongoingLogin = false;
-                            break;
-                        }
-                    }
-                    if (attempts >= 3 && user is User)
-                    {
-                        Console.Clear();
-
-                        User currentUser = (User)user;
-                        currentUser.IsBlocked = true;
-                        Console.WriteLine(blockedMessage);
-                    }
-                    break;
-                }
-                else
-                {
-                    
-                    Console.Clear();
-                    Console.WriteLine("No User with that username exists.\nPress ENTER to try again");
-                    Console.ReadLine();
-                    Console.Clear();
-                    continue;
-                }
-            }
-            return loginStatus == PasswordVerificationResult.Success;
         }
 
         [Obsolete("Asked more senior programmer, this is more hassle than it is worth. Use specific getters GetUserList, GetTransferList")]

@@ -10,8 +10,17 @@ namespace BankingApp
         {
             
             BankApp.Startup();
-            
-            BankApp.LogInCheck();
+
+            (BasicUser?, bool) loginData = BasicUser.LogInCheck();
+            var currentUser = BasicUser.GetUserType(loginData.Item1);
+
+            if (currentUser != null && loginData.Item2 == true)
+            {
+                //Run menu for appropriate type of user here. User/Admin
+            }
+
+            Console.WriteLine($"Login succeeded? {loginData.Item2}. As {currentUser}");
+
             Console.ReadLine();
             BankApp.Exit();
         }

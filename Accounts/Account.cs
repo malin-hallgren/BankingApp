@@ -13,6 +13,8 @@ namespace BankingApp.Accounts
         public decimal Balance { get; set; }
         public string Currency { get; set; }
         public User Owner { get; set; }
+        private List<Transfer> logList { get; set; }
+
 
         public Account(string currency, User owner, decimal balance = 0)
         {
@@ -20,6 +22,7 @@ namespace BankingApp.Accounts
             Balance = balance;
             Currency = currency;
             Owner = owner;
+            logList = new List<Transfer>();
         }
 
        public void Transfer(User owner, Account account)

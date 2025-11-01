@@ -24,8 +24,8 @@ namespace BankingApp.Accounts
         public SavingsAccount(string currency, User owner, decimal interest = 2, decimal balance = 0)
             : base(currency, owner, balance)
         {
-            this.interest = interest;
-            this.balance = balance;
+            Interest = interest;
+            Balance = balance;
             
         }
 

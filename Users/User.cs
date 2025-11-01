@@ -8,7 +8,6 @@ namespace BankingApp.Users
     internal class User : BasicUser
     {
         private List<Account> accountList;
-        //private List<Log>? logList;
         public  List<Loan>? LoanList { get; set; }
         public bool IsBlocked { get; set; }
 
@@ -31,7 +30,7 @@ namespace BankingApp.Users
         {
             foreach (var a in accountList)
             {
-                // TODO: add implementation when Account Class is done.                
+                Console.WriteLine(a);
             }
 
         }
@@ -44,6 +43,7 @@ namespace BankingApp.Users
 
         public void OpenAccount(string accountType, string currency)
         {
+
             if (accountType.ToLower().Equals("savings"))
             {
                 accountList.Add(new SavingsAccount(currency, this));

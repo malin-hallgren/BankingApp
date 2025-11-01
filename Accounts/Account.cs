@@ -16,6 +16,7 @@ namespace BankingApp.Accounts
         private List<Transfer> logList { get; set; }
 
 
+
         public Account(string currency, User owner, decimal balance = 0)
         {
             AccountNumber = Guid.NewGuid();
@@ -25,9 +26,14 @@ namespace BankingApp.Accounts
             logList = new List<Transfer>();
         }
 
-       public void Transfer(User owner, Account account)
+       public void CreateTransfer(decimal amount, DateTime date, Account from, Account to)
         {
-            // TODO: Add implementation 
+            //LogList.add(new Transfer(amount, date, from, to));
+        }
+
+        public override string ToString()
+        {
+            return $"Account Number: {AccountNumber}, Balance: {Balance} {Currency}, Owner: {Owner.Name}";
         }
     }
 }

@@ -9,14 +9,6 @@ namespace BankingApp.Accounts
 {
     internal class SavingsAccount : Account
     {
-        //DONE:
-        // skapa en get set för balance och sätt den från konstruktorn 
-        // desmma för currency
-        
-        // TODO:
-        // add to action log - när ett account skapas. 
-
-
         public decimal Interest { get; set; }
         public decimal Balance { get; set; }
 
@@ -29,16 +21,6 @@ namespace BankingApp.Accounts
             
         }
 
-        // public decimal getInterest(){
-        //     return interest;
-        // }
-
-        // public decimal setInterest(decimal interest){
-        //     this.interest = interest;
-        // }
-
-
-        
         public override string ToString()
         {
            return $"This savings account has an interest rate of: {Interest}";

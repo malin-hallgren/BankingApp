@@ -11,7 +11,7 @@ namespace BankingApp.Users
     {
 
         // Constructor
-        public Admin(string userName, string name, string phoneNumber, string emailAddress, string password)
+        public Admin(string name, string userName, string phoneNumber, string emailAddress, string password)
             : base(userName, name, phoneNumber, emailAddress, password)
         {
         }
@@ -57,11 +57,15 @@ namespace BankingApp.Users
             newUser.EmailAddress = InputHelpers.ValidString();
 
             Console.SetCursorPosition(20, 4);
-            newUser.Password = InputHelpers.ValidString();
 
-            BankApp.AddToList(newUser);
+            newUser.Password = BasicUser.PasswordHash(newUser, InputHelpers.ValidString());
+
+            BankApp.AddToUserList(newUser);
+
 
             Console.Clear();
+
+      
         }
 
     }

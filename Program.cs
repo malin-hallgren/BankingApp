@@ -1,6 +1,7 @@
 ﻿using BankingApp.Users;
 using BankingApp.Utilities;
 using BankingApp.Accounts;
+using BankingApp.UI;
 
 namespace BankingApp
 {
@@ -10,8 +11,34 @@ namespace BankingApp
         {
             
             BankApp.Startup();
-            Console.ReadLine();
+
+            while (BankApp.IsRunning)
+            {
+                (BasicUser?, bool) loginData = Login.Start();
+                
+                if (loginData.Item2)
+                {
+                    var currentUser = loginData.Item1;
+
+                    if (currentUser != null)
+                    {
+                        if (currentUser is Admin)
+                        {
+                            var admin = currentUser as Admin;
+                            AdminUI.Start();
+                        }
+                        else
+                        {
+                            var user = currentUser as User;
+                            CustomerUI.Start(user);
+                        }
+                    }
+                }
+                
+            }
             
+
+            Console.ReadLine();
             BankApp.Exit();
 
             // User user1 = new User("JD", "John", "03555445", "johndoe@gmail.com", "Doepasssword", false, 152);

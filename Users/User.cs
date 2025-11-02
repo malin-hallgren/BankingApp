@@ -9,7 +9,7 @@ namespace BankingApp.Users
     {
         private List<Account> accountList;
         //private List<Log>? logList;
-        public  List<Loan>? LoanList { get; set; }
+        private List<Loan> loanList;
         public bool IsBlocked { get; set; }
 
         public uint CreditScore { get; set; }
@@ -17,7 +17,7 @@ namespace BankingApp.Users
         public User(string userName, string name, string phoneNumber, string emailAddress, string password, bool isBlocked, uint creditScore) : base(userName, name, phoneNumber, emailAddress, password)
         {
             accountList = new List<Account>();
-            LoanList = new List<Loan>();
+            loanList = new List<Loan>();
             IsBlocked = isBlocked;
             CreditScore = creditScore;
         }
@@ -36,11 +36,58 @@ namespace BankingApp.Users
 
         }
 
-        /*  TODO: Implement
-         *  public Loan RequestLoan()
-          {
-              return;
-          }*/
+        /// <summary>
+        /// Requests a loan of the specified size for the current user.
+        /// </summary>
+        /// <remarks>If the loan is approved, it is added to the user's list of loans and a confirmation
+        /// message is displayed. If the loan is denied, an error message is displayed indicating the reason for
+        /// denial.</remarks>
+        /// <param name="loansize">The amount of the loan requested. Must be a positive decimal value.</param>
+        public void RequestLoan(decimal loansize)
+        {
+            try
+            {
+                Loan l = new Loan(this, loansize);
+                Console.WriteLine("Loan was successfully approved and addes to your list of loans!:" + l); ;
+
+            }
+            catch (InvalidOperationException ex)
+            {
+
+                Console.WriteLine($"Loan denied: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Adds a loan to the list of loans.
+        /// </summary>
+        /// <param name="loan">The loan to be added. Cannot be null.</param>
+        public void AddLoan(Loan loan)
+        {
+            loanList.Add(loan);
+        }
+
+        /// <summary>
+        /// Removes the specified loan from the loan list.
+        /// </summary>
+        /// <remarks>This method removes the first occurrence of the specified loan from the list. If the
+        /// loan is not found, the list remains unchanged.</remarks>
+        /// <param name="loan">The loan to be removed. Must not be null.</param>
+        public void RemoveLoan(Loan loan)
+        {
+            loanList.Remove(loan);
+        }
+
+        /// <summary>
+        /// Retrieves a collection of all loans.
+        /// </summary>
+        /// <returns>An <see cref="IEnumerable{Loan}"/> containing all loans. The collection will be empty if no loans are
+        /// available.</returns>
+        public IEnumerable<Loan> GetLoans()
+        {
+            return loanList.ToList();
+        }
+
 
         public void OpenAccount(string accountType, string currency)
         {
@@ -54,6 +101,6 @@ namespace BankingApp.Users
             }
         }
 
-            //user.GetType() == typeof(User)
+        //user.GetType() == typeof(User)
     }
 }

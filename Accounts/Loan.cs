@@ -1,4 +1,5 @@
 ﻿using BankingApp.Users;
+using Microsoft.Extensions.Options;
 using System;
 using System.Buffers;
 using System.Collections.Generic;
@@ -11,21 +12,80 @@ namespace BankingApp.Accounts
     internal class Loan
     {
         public decimal Size { get; set; }
-        public decimal Interest { get; set; }
+        private  decimal LoanInterest { get; set; }
         public User Owner { get; set; }
         public double MortagePercent { get; set; }
 
-        public Loan(User owner, decimal size, decimal interest)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Loan"/> class with the specified owner and loan size.
+        /// </summary>
+        /// <remarks>This constructor calculates the interest based on the loan size and associates the
+        /// loan with the owner.</remarks>
+        /// <param name="owner">The user who owns the loan. Must have a credit score of 100 or higher.</param>
+        /// <param name="size">The size of the loan to be created.</param>
+        /// <exception cref="InvalidOperationException">Thrown if the owner's credit score is less than 100.</exception>
+        public Loan(User owner, decimal size)
         {
+            if (owner.CreditScore < 100)
+            {
+                throw new InvalidOperationException("Loan denied due to low creditscore.");
+            }
+
             Size = size;
-            Interest = interest;
             Owner = owner;
-            
+            CalculateInterest(size);
+            owner.AddLoan(this);
+           
         }
 
+        // TODO: Make sure that the paremeter isn´t negative before calculate?
+
+        /// <summary>
+        /// Updates the interest amount based on the specified loan value.
+        /// </summary>
+        /// <remarks>This method recalculates the interest using the provided loan amount and updates the
+        /// internal state accordingly. Ensure that the loan amount is valid and non-negative before calling this
+        /// method.</remarks>
+        /// <param name="loan">The principal loan amount for which the interest is to be calculated. Must be a positive decimal value.</param>
+        public void UpdateInterest(decimal loan)
+        {
+            LoanInterest = CalculateInterest(loan);
+        }
+
+        //Just a quick draft of calculate interest. We should improve it by adding more factors for the calculation, like income size, repaymeny period etc.
+
+        /// <summary>
+        /// Decides interest depending on the size of the Loan
+        /// </summary>
+        /// <param name="loan"> Size of loan</param>
+        public decimal CalculateInterest(decimal loan)
+        {
+            if (loan < 1000000)
+            {
+                return LoanInterest = 0.042m;
+            }
+            else if (loan > 1000000 && loan < 3000000)
+            {
+                return LoanInterest = 0.039m;
+            }
+            else if (loan > 3000000 && loan < 5000000)
+            {
+                return LoanInterest = 0.032m;
+            }
+
+            else
+            {
+                return LoanInterest = 0.025m;
+            }
+        }
+
+        /// <summary>
+        /// Returns a string representation of the loan details, including size, interest, and owner.
+        /// </summary>
+        /// <returns>A string containing the size of the loan, the interest rate, and the owner's name.</returns>
         public override string ToString()
         {
-            return $"Size of loan: {Size} | Interest: {Interest} | Owner: {Owner} ";
+            return $"Size of loan: {Size} | Interest: {LoanInterest} | Owner: {Owner} ";
         }
     }
 

@@ -62,7 +62,7 @@ namespace BankingApp.Accounts
         {
             if (loan < 1000000)
             {
-                return LoanInterest = 0.032m;
+                return LoanInterest = 0.042m;
             }
             else if (loan > 1000000 && loan < 3000000)
             {
@@ -70,12 +70,12 @@ namespace BankingApp.Accounts
             }
             else if (loan > 3000000 && loan < 5000000)
             {
-                return LoanInterest = 0.042m;
+                return LoanInterest = 0.032m;
             }
 
             else
             {
-                return LoanInterest = 0.06m;
+                return LoanInterest = 0.025m;
             }
         }
 

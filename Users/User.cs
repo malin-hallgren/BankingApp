@@ -60,7 +60,7 @@ namespace BankingApp.Users
             try
             {
                 Loan l = new Loan(this, loansize);
-                Console.WriteLine("Loan was successfully approved and addes to your list of loans!:" + l); ;
+                Console.WriteLine("Loan was successfully approved and added to your list of loans!:" + l);
 
             }
             catch (InvalidOperationException ex)

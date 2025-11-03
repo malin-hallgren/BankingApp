@@ -60,6 +60,8 @@ namespace BankingApp.Accounts
         /// <param name="loan"> Size of loan</param>
         public decimal CalculateInterest(decimal loan)
         {
+            // Maybe implement an Enum for different loan sizes instead of using hardcoded values
+            // Show different interest rates depending on the size of the loan to the user before accepting the loan
             if (loan < 1000000)
             {
                 return LoanInterest = 0.042m;

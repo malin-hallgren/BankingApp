@@ -14,6 +14,9 @@ namespace BankingApp.Accounts
         public string Currency { get; set; }
         public User Owner { get; set; }
 
+        private List<Transfer> logList;
+
+
 
         public Account(string currency, User owner, decimal balance = 0)
         {
@@ -21,11 +24,16 @@ namespace BankingApp.Accounts
             Balance = balance;
             Currency = currency;
             Owner = owner;
+            logList = new List<Transfer>();
+        }
+        public List<Transfer> GetLogList()
+        {
+            return new List<Transfer>(logList);
         }
 
-       public void CreateTransfer(decimal amount, DateTime date, Account from, Account to)
+        public void CreateTransfer(decimal amount, DateTime date, Account from, Account to)
         {
-            //LogList.add(new Transfer(amount, date, from, to));
+            logList.Add(new Transfer(amount, date, from, to));
         }
 
         public override string ToString()

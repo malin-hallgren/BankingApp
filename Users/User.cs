@@ -8,8 +8,7 @@ namespace BankingApp.Users
     internal class User : BasicUser
     {
         private List<Account> accountList;
-        //private List<Log>? logList;
-        private List<Loan> loanList;
+        private List<Loan>? loanList;
         public bool IsBlocked { get; set; }
 
         public uint CreditScore { get; set; }
@@ -22,16 +21,29 @@ namespace BankingApp.Users
             CreditScore = creditScore;
         }
 
+        /// <summary>
+        /// Prints the action log for all accounts owned by the user
+        /// </summary>
         public void PrintActionLog()
         {
-
+            foreach (var a in accountList)
+            {
+                Console.WriteLine($"Action log for account {a.AccountNumber}:");
+                foreach (var log in a.GetLogList())
+                {
+                    Console.WriteLine(log);
+                }
+            }
         }
 
+        /// <summary>
+        /// Prints all accounts owned by the user
+        /// </summary>
         public void PrintAccounts()
         {
             foreach (var a in accountList)
             {
-                // TODO: add implementation when Account Class is done. Consider writing Get function and using OutputHelpers.PrintList(Accounts)? /MH               
+                // TODO: add implementation when Account Class is done.                
             }
 
         }
@@ -48,7 +60,7 @@ namespace BankingApp.Users
             try
             {
                 Loan l = new Loan(this, loansize);
-                Console.WriteLine("Loan was successfully approved and addes to your list of loans!:" + l); ;
+                Console.WriteLine("Loan was successfully approved and added to your list of loans!:" + l);
 
             }
             catch (InvalidOperationException ex)
@@ -89,8 +101,18 @@ namespace BankingApp.Users
         }
 
 
+        /// <summary>
+        /// Opens a new account of the specified type and currency.
+        /// </summary>
+        /// <remarks>If <paramref name="accountType"/> is "savings" (case-insensitive), a savings account
+        /// is created. Otherwise, a standard account is created. The new account is added to the internal account
+        /// list.</remarks>
+        /// <param name="accountType">The type of account to open. Valid values are "savings" for a savings account or any other value for a
+        /// standard account.</param>
+        /// <param name="currency">The currency in which the account will be denominated. For example, "USD" for US dollars or "EUR" for euros.</param>
         public void OpenAccount(string accountType, string currency)
         {
+
             if (accountType.ToLower().Equals("savings"))
             {
                 accountList.Add(new SavingsAccount(currency, this));
@@ -100,7 +122,5 @@ namespace BankingApp.Users
                 accountList.Add(new Account(currency, this));
             }
         }
-
-        //user.GetType() == typeof(User)
     }
 }

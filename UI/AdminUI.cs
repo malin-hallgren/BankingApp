@@ -11,7 +11,7 @@ namespace BankingApp.UI
     internal class AdminUI
     {
         // This is called with AdminUI.Start
-        public static void Start()
+        public static void AdminStartMenu()
         {
             string prompt = "Admin Menu"; 
             string[] options =
@@ -31,7 +31,7 @@ namespace BankingApp.UI
                 case 0:
                     Console.Clear();
                     Admin.CreateUser();
-                    Start();
+                    AdminStartMenu();
                     break;
 
                 case 1:
@@ -39,14 +39,14 @@ namespace BankingApp.UI
                     List<BasicUser> users = BankApp.GetUserList();
                     OutputHelpers.PrintList(users);
                     Console.ReadLine();
-                    Start();
+                    AdminStartMenu();
                     break;
 
                 case 2:
                     Console.Clear();
                     Console.WriteLine("Update Currencies - Coming soon!");
                     Console.ReadLine();
-                    Start();
+                    AdminStartMenu();
                     // Update currencies
                     break;
 
@@ -54,7 +54,7 @@ namespace BankingApp.UI
                     Console.Clear();
                     Console.WriteLine("Update Interest Rates - Coming soon!");
                     Console.ReadLine();
-                    Start();
+                    AdminStartMenu();
                     // Update Interest Rates
                     break;
                 case 4:

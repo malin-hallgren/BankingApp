@@ -60,12 +60,8 @@ namespace BankingApp.Users
             newUser.EmailAddress = InputHelpers.ValidString();
 
             Console.SetCursorPosition(20, 4);
-
             newUser.Password = BasicUser.PasswordHash(newUser, InputHelpers.ValidString());
-
             BankApp.AddToUserList(newUser);
-
-
             Console.Clear();
         }
 

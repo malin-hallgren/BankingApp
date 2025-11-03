@@ -10,16 +10,25 @@ namespace BankingApp.Accounts
     internal class SavingsAccount : Account
     {
         public decimal Interest { get; set; }
+        public decimal Balance { get; set; }
 
-        public SavingsAccount(string currency, User owner, decimal interest = 0, decimal balance = 0)
+
+        public SavingsAccount(string currency, User owner, decimal interest = 3, decimal balance = 0)
             : base(currency, owner, balance)
         {
             Interest = interest;
+            Balance = balance;
+        }
+
+        public void ApplyInterest()
+        {
+            decimal interestAmount = (Balance * Interest) / 100;
+            // Balance += interestAmount;
         }
 
         public override string ToString()
         {
-            return $"This savings account has an interest rate of: {Interest}";
+           return $"This savings account has an interest rate of: {Interest}";
         }
     }
 }

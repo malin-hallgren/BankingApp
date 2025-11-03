@@ -31,7 +31,7 @@ namespace BankingApp.Users
         {
             foreach (var a in accountList)
             {
-                // TODO: add implementation when Account Class is done.                
+                // TODO: add implementation when Account Class is done. Consider writing Get function and using OutputHelpers.PrintList(Accounts)? /MH               
             }
 
         }

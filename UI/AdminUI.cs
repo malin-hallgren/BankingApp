@@ -5,14 +5,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Cryptography.X509Certificates;
+using System.Runtime.CompilerServices;
 
 namespace BankingApp.UI
 {
     internal class AdminUI
     {
         // This is called with AdminUI.Start
-        public static void AdminStartMenu()
+        public static void Start(Admin admin)
         {
+            
             string prompt = "Admin Menu"; 
             string[] options =
             {
@@ -23,49 +26,43 @@ namespace BankingApp.UI
                 "Log out"
             };
 
-            Menu menu = new Menu(prompt, options);
-            int selectedIndex = menu.Run();
-               
+            int selectedIndex = Menu.Run(options, prompt);
+            Console.Clear();
+
             switch (selectedIndex)
             {
                 case 0:
-                    Console.Clear();
                     Admin.CreateUser();
-                    AdminStartMenu();
+                    Menu.ReturnToStart(admin);
                     break;
 
                 case 1:
-                    Console.Clear();
                     List<BasicUser> users = BankApp.GetUserList();
                     OutputHelpers.PrintList(users);
-                    Console.ReadLine();
-                    AdminStartMenu();
+                    Menu.ReturnToStart(admin);
                     break;
 
                 case 2:
-                    Console.Clear();
                     Console.WriteLine("Update Currencies - Coming soon!");
-                    Console.ReadLine();
-                    AdminStartMenu();
+                    Menu.ReturnToStart(admin);
                     // Update currencies
                     break;
 
                 case 3:
-                    Console.Clear();
-                    Console.WriteLine("Update Interest Rates - Coming soon!");
-                    Console.ReadLine();
-                    AdminStartMenu();
-                    // Update Interest Rates
+                    Console.WriteLine("Input new interest");
+                    var input = InputHelpers.ValidDecimal();
+                    admin.UpdateInterestForAllLoans(BankApp.GetUserList(), input);
+                    Menu.ReturnToStart(admin);
                     break;
                 case 4:
-                    Console.Clear();
-                    Console.WriteLine("Logged out successfully. Please log in again");
+                    Menu.ReturnToLogin();
                     return;
 
                 default:
                     // If error somehow
                     break;
             }
-        }
+
+            }    
     }
 }

@@ -10,10 +10,10 @@ namespace BankingApp.UI
 {
     internal class CustomerUI
     {
-        // This is called with CustomerUI.Start
         public static void Start(User user)
         {
-            string prompt = "Customer Menu " + user.Name; // Might be cool if this íncludes "user.name" or something. It absolutely can, long as we send the User object along!
+
+            string UserPrompt = "Customer Menu ";
             string[] options =
             {
                 "Print Action Log",
@@ -23,47 +23,34 @@ namespace BankingApp.UI
                 "Log out"
             };
 
-            Menu menu = new Menu(prompt, options);
-            int selectedIndex = menu.Run();
+            int selectedIndex = Menu.Run(options, UserPrompt);
+            Console.Clear();
 
             switch (selectedIndex)
             {
                 case 0:
-                    Console.Clear();
-                    //OutputHelpers.PrintList(user.logList);
-                    Console.WriteLine("Action List - Coming Soon");
-                    Console.ReadLine();
-                    Start(user);
-                    // Print Action Log
+                    user.PrintActionLog();
+                    Menu.ReturnToStart(user);
                     break;
-
                 case 1:
-                    Console.Clear();
                     user.PrintAccounts();
-                    Console.WriteLine("Account List - Coming Soon");
-                    Console.ReadLine();
-                    Start(user);
-                    // Print Accounts
+                    Menu.ReturnToStart(user);
                     break;
-
                 case 2:
-                    Console.Clear();
-                    Console.WriteLine("Request Loan - Coming Soon");
-                    Console.ReadLine();
-                    Start(user);
+                    Console.WriteLine("Please specify the size of loan which you would like:");
+                    decimal loanSize = InputHelpers.ValidDecimal();
+                    user.RequestLoan(loanSize, user);
+                    Menu.ReturnToStart(user);
                     // Request Loan
                     break;
 
                 case 3:
-                    Console.Clear();
                     Console.WriteLine("Open Account - Coming Soon");
-                    Console.ReadLine();
-                    Start(user);
+                    Menu.ReturnToStart(user);
                     // Open Account
                     break;
                 case 4:
-                    Console.Clear();
-                    Console.WriteLine("Logged out successfully. Please log in again");
+                    Menu.ReturnToLogin();
                     return;
 
                 default:

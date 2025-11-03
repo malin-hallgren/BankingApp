@@ -10,7 +10,7 @@ namespace BankingApp.Users
         private List<Account> accountList;
         private List<Loan>? loanList;
         public bool IsBlocked { get; set; }
-
+        private decimal Sum;
         public uint CreditScore { get; set; }
 
         public User(string userName, string name, string phoneNumber, string emailAddress, string password, bool isBlocked, uint creditScore) : base(userName, name, phoneNumber, emailAddress, password)
@@ -45,7 +45,6 @@ namespace BankingApp.Users
             {
                 // TODO: add implementation when Account Class is done.                
             }
-
         }
 
         /// <summary>
@@ -55,18 +54,28 @@ namespace BankingApp.Users
         /// message is displayed. If the loan is denied, an error message is displayed indicating the reason for
         /// denial.</remarks>
         /// <param name="loansize">The amount of the loan requested. Must be a positive decimal value.</param>
-        public void RequestLoan(decimal loansize)
+        public void RequestLoan(decimal loansize, User user)
         {
-            try
-            {
-                Loan l = new Loan(this, loansize);
-                Console.WriteLine("Loan was successfully approved and added to your list of loans!:" + l);
 
+            if (loansize <= user.Sum * 5)
+            {
+                Console.WriteLine($"Loan cannot be larger than five times the total sum of your money in the bank. {user.Sum * 5}");
+                Console.ReadLine();
             }
-            catch (InvalidOperationException ex)
+            else
             {
 
-                Console.WriteLine($"Loan denied: {ex.Message}");
+                try
+                {
+                    Loan l = new Loan(this, loansize);
+                    Console.WriteLine("Loan was successfully approved and added to your list of loans!:" + l);
+                    loanList.Add(l);
+
+                }
+                catch (InvalidOperationException ex)
+                {
+                    Console.WriteLine($"Loan denied: {ex.Message}");
+                }
             }
         }
 
@@ -95,10 +104,15 @@ namespace BankingApp.Users
         /// </summary>
         /// <returns>An <see cref="IEnumerable{Loan}"/> containing all loans. The collection will be empty if no loans are
         /// available.</returns>
-        public IEnumerable<Loan> GetLoans()
+        /// 
+        public List<Loan> GetLoans()
         {
-            return loanList.ToList();
+            return new List<Loan>(loanList);
         }
+        //public IEnumerable<Loan> GetLoans()
+        //{
+        //    return loanList.ToList();
+        //}
 
 
         /// <summary>

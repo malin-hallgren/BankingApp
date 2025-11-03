@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BankingApp.Users;
+using BankingApp.UI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,38 +10,15 @@ namespace BankingApp.Utilities
 {
     internal class Menu
     {
-        /*
-         * HOW TO USE:
-         * string prompt = "Header text";
-         * string[] options = { "Option 1", "Option 2", "Option 3" };
-         * Menu mainMenu = new Menu(prompt, options);
-         * 
-         * int selectedIndex = mainMenu.Run();
-         * 
-         * switch (selectedIndex)
-         * ..vanlig switch case..
-         */
+        public static int SelectedIndex = 0;
 
-        private int SelectedIndex;
-        private int prevIndex;
-        private string[] Options;
-        private string Prompt;
-
-        public Menu(string prompt, string[] options)
+        private static void DisplayOptions(string[] options, string title) // Private as it will only be called from "Run"
         {
-            Prompt = prompt; // Header Text
-            Options = options; // Menu choices (array of strings)
-            SelectedIndex = 0;
-            prevIndex = 0;
-        }
+            Console.WriteLine($"{title}\n");
 
-        private void DisplayOptions() // Private as it will only be called from "Run"
-        {
-            Console.WriteLine($"{Prompt}\n");
-
-            for (int i = 0; i < Options.Length; i++)
+            for (int i = 0; i < options.Length; i++)
             {
-                string currentOption = Options[i];
+                string currentOption = options[i];
 
                 if (i == SelectedIndex)
                 {
@@ -60,18 +39,20 @@ namespace BankingApp.Utilities
             Console.ResetColor();
         }
 
-        public int Run()
+        public static int Run(string[] options, string title)
         {
             Console.CursorVisible = false;
 
             ConsoleKey keyPressed = 0;
+
+            int prevIndex = SelectedIndex;
 
             // Runs until Enter is pressed
             while (keyPressed != ConsoleKey.Enter)
             {
                 
                 Console.Clear(); // Clears the console each loop
-                DisplayOptions(); // Calls the Display method
+                DisplayOptions(options, title); // Calls the Display method
 
                 // Reads the key pressed by the user and stores it in "keyPressed"
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true);
@@ -85,7 +66,7 @@ namespace BankingApp.Utilities
                     // If you go under first menu option, move to last index
                     if (SelectedIndex == -1)
                     {
-                        SelectedIndex = Options.Length - 1;
+                        SelectedIndex = options.Length - 1;
                     }
                     ClearLines(prevIndex, SelectedIndex);
                 }
@@ -96,7 +77,7 @@ namespace BankingApp.Utilities
                     SelectedIndex++;
 
                     // If you go over last menu option, move to first index
-                    if (SelectedIndex > Options.Length - 1)
+                    if (SelectedIndex > options.Length - 1)
                     {
                         SelectedIndex = 0;
                     }
@@ -115,6 +96,32 @@ namespace BankingApp.Utilities
             Console.Write(new string(' ', Console.BufferWidth));
             Console.SetCursorPosition(0, current + 2);
             Console.Write(new string(' ', Console.BufferWidth));
+        }
+
+        //Specific Menus below
+
+        
+
+        public static void ReturnToStart(BasicUser user)
+        {
+            if (user.GetType() == typeof(User))
+            {
+                Console.ReadLine();
+                User Customer = (User)user;
+                CustomerUI.Start(Customer);
+            }
+
+            else
+            {
+                Console.ReadLine();
+                Admin admin = (Admin)user;
+                AdminUI.Start(admin);
+            }
+        }
+
+        public static void ReturnToLogin()
+        {
+            Console.WriteLine("Logged out successfully. Please log in again if you wish to continue.\nPress ENTER to continue...");
         }
     }
 }

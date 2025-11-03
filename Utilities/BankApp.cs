@@ -61,7 +61,7 @@ namespace BankingApp.Utilities
                         if (currentUser is Admin)
                         {
                             var admin = currentUser as Admin;
-                            AdminUI.Start();
+                            AdminUI.Start(admin);
                         }
                         else
                         {

@@ -98,7 +98,7 @@ namespace BankingApp.Users
             bool ongoingLogin = true;
             int attempts = 0;
             var loginStatus = new PasswordVerificationResult();
-            string[] blockedMessage = { "The account has been ", "BLOCKED", " due to repeated failed access attempts. Please contact an admin" };
+            string[] blockedMessage = { "The account has been ", "BLOCKED", " due to repeated failed access attempts. Please contact an admin." };
             BasicUser? loginUser = null;
 
             while (ongoingLogin)
@@ -107,9 +107,9 @@ namespace BankingApp.Users
 
                 string username = InputHelpers.ValidString().ToLower();
                 var users = BankApp.GetUserList();
-                if (users.Exists(x => x.UserName.Contains(username)))
+                if (users.Exists(x => x.UserName == username))
                 {
-                    loginUser = users.Find(x => x.UserName.Contains(username));
+                    loginUser = users.Find(x => x.UserName == username);
                     Console.Clear();
 
                     if (loginUser is User)
@@ -145,10 +145,18 @@ namespace BankingApp.Users
                             Console.Write(" attempts left. ");
                             continue;
                         }
-                        else
+                        else if (loginStatus == PasswordVerificationResult.Success)
                         {
                             Console.Clear();
                             Console.WriteLine($"Welcome to *REDACTED* Bank, {loginUser.Name}");
+                            Console.ReadLine();
+                            ongoingLogin = false;
+                            break;
+                        }
+                        else if (loginStatus == PasswordVerificationResult.SuccessRehashNeeded)
+                        {
+                            Console.Clear();
+                            Console.WriteLine($"Welcome to *REDACTED* Bank, {loginUser.Name}. Please reset your password");
                             Console.ReadLine();
                             ongoingLogin = false;
                             break;

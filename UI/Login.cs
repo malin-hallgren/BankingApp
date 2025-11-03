@@ -19,8 +19,7 @@ namespace BankingApp.UI
                 "Quit"
             };
 
-            Menu menu = new Menu(prompt, options);
-            int selectedIndex = menu.Run();
+            int selectedIndex = Menu.Run(options, prompt);
 
             switch (selectedIndex)
             {

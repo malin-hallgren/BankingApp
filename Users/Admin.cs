@@ -1,4 +1,5 @@
-﻿using BankingApp.Utilities;
+﻿using BankingApp.Accounts;
+using BankingApp.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,9 +36,9 @@ namespace BankingApp.Users
         /// <summary>
         /// Creates a new user and adds it to the global user list
         /// </summary>
-        public static  void CreateUser()
+        public static void CreateUser()
         {
-            List<string> fields = new List<string>() {"Name:", "Username:", "Phone number:", "Email address:", "Password:" };
+            List<string> fields = new List<string>() { "Name:", "Username:", "Phone number:", "Email address:", "Password:" };
             User newUser = new User("", "", "", "", "", false, 0);
 
 
@@ -60,18 +61,30 @@ namespace BankingApp.Users
             newUser.EmailAddress = InputHelpers.ValidString();
 
             Console.SetCursorPosition(20, 4);
-
             newUser.Password = BasicUser.PasswordHash(newUser, InputHelpers.ValidString());
-
             BankApp.AddToUserList(newUser);
-
-
             Console.Clear();
         }
 
         public void PrintContactInfo()
         {
             Console.WriteLine($"Contact info for {Name}:\nEmail: {EmailAddress}\nPhone Number: {PhoneNumber}");
+        }
+
+        public void UpdateInterestForAllLoans(List<BasicUser> owners, decimal newInterest)
+        {
+
+            foreach (var bu in owners)
+            {
+                if (bu.GetType() == typeof(User))
+                {
+                    var user = (User)bu;
+                    foreach (var l in user.GetLoans())
+                    {
+                        l.AdminUpdateInterest(newInterest);
+                    }
+                }
+            }
         }
     }
 }

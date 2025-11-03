@@ -32,6 +32,24 @@ namespace BankingApp.Utilities
             }
         }
 
+        public static decimal ValidDecimal()
+        {
+            while (true)
+            {
+                string? input = Console.ReadLine();
+
+                if (Decimal.TryParse(input, out var value))
+                {
+                    return value;
+                }
+                else
+                {
+                    Console.WriteLine("Please input a valid number.\nPress ENTER to try again...");
+                    Console.ReadLine();
+                }
+            }
+        }
+
         /// <summary>
         /// Takes input from user, masking the input as the user writes in a standard password way
         /// </summary>

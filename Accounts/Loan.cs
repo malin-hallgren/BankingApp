@@ -37,38 +37,29 @@ namespace BankingApp.Accounts
             owner.AddLoan(this);
            
         }
-
-        // TODO: Make sure that the paremeter isn´t negative before calculate?
-
-        /// <summary>
-        /// Updates the interest amount based on the specified loan value.
-        /// </summary>
-        /// <remarks>This method recalculates the interest using the provided loan amount and updates the
-        /// internal state accordingly. Ensure that the loan amount is valid and non-negative before calling this
-        /// method.</remarks>
-        /// <param name="loan">The principal loan amount for which the interest is to be calculated. Must be a positive decimal value.</param>
-        public void UpdateInterest(decimal loan)
+       
+        public void AdminUpdateInterest(decimal interest)
         {
-            LoanInterest = CalculateInterest(loan);
+            LoanInterest = interest;
         }
-
+        
         //Just a quick draft of calculate interest. We should improve it by adding more factors for the calculation, like income size, repaymeny period etc.
 
         /// <summary>
         /// Decides interest depending on the size of the Loan
         /// </summary>
         /// <param name="loan"> Size of loan</param>
-        public decimal CalculateInterest(decimal loan)
+        private decimal CalculateInterest(decimal loan)
         {
             // Maybe implement an Enum for different loan sizes instead of using hardcoded values
             // Show different interest rates depending on the size of the loan to the user before accepting the loan
             if (loan < 1000000)
             {
-                return LoanInterest = 0.042m;
+                return 0.042m;
             }
             else if (loan > 1000000 && loan < 3000000)
             {
-                return LoanInterest = 0.039m;
+                return 0.039m;
             }
             else if (loan > 3000000 && loan < 5000000)
             {

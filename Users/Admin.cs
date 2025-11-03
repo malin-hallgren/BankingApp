@@ -32,6 +32,9 @@ namespace BankingApp.Users
             }
         }
 
+        /// <summary>
+        /// Creates a new user and adds it to the global user list
+        /// </summary>
         public static  void CreateUser()
         {
             List<string> fields = new List<string>() {"Name:", "Username:", "Phone number:", "Email address:", "Password:" };
@@ -64,9 +67,11 @@ namespace BankingApp.Users
 
 
             Console.Clear();
-
-      
         }
 
+        public void PrintContactInfo()
+        {
+            Console.WriteLine($"Contact info for {Name}:\nEmail: {EmailAddress}\nPhone Number: {PhoneNumber}");
+        }
     }
 }

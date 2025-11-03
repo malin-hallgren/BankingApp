@@ -21,6 +21,7 @@ namespace BankingApp.Utilities
          */
 
         private int SelectedIndex;
+        private int prevIndex;
         private string[] Options;
         private string Prompt;
 
@@ -29,11 +30,12 @@ namespace BankingApp.Utilities
             Prompt = prompt; // Header Text
             Options = options; // Menu choices (array of strings)
             SelectedIndex = 0;
+            prevIndex = 0;
         }
 
         private void DisplayOptions() // Private as it will only be called from "Run"
         {
-            Console.WriteLine(Prompt);
+            Console.WriteLine($"{Prompt}\n");
 
             for (int i = 0; i < Options.Length; i++)
             {
@@ -67,6 +69,7 @@ namespace BankingApp.Utilities
             // Runs until Enter is pressed
             while (keyPressed != ConsoleKey.Enter)
             {
+                
                 Console.Clear(); // Clears the console each loop
                 DisplayOptions(); // Calls the Display method
 
@@ -76,6 +79,7 @@ namespace BankingApp.Utilities
 
                 if (keyPressed == ConsoleKey.UpArrow)
                 {
+                    prevIndex = SelectedIndex;
                     SelectedIndex--;
 
                     // If you go under first menu option, move to last index
@@ -83,10 +87,12 @@ namespace BankingApp.Utilities
                     {
                         SelectedIndex = Options.Length - 1;
                     }
+                    ClearLines(prevIndex, SelectedIndex);
                 }
 
                 else if (keyPressed == ConsoleKey.DownArrow)
                 {
+                    prevIndex = SelectedIndex;
                     SelectedIndex++;
 
                     // If you go over last menu option, move to first index
@@ -94,12 +100,21 @@ namespace BankingApp.Utilities
                     {
                         SelectedIndex = 0;
                     }
+                    ClearLines(prevIndex, SelectedIndex);
                 }
             }
 
             Console.CursorVisible = true;
             // Returns the index of the selected option when Enter is pressed (perfect for switch cases)
             return SelectedIndex;
+        }
+
+        private static void ClearLines(int prev, int current)
+        {
+            Console.SetCursorPosition(0, prev + 2);
+            Console.Write(new string(' ', Console.BufferWidth));
+            Console.SetCursorPosition(0, current + 2);
+            Console.Write(new string(' ', Console.BufferWidth));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using BankingApp.Users;
+﻿using BankingApp.Accounts;
+using BankingApp.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace BankingApp.Utilities
         private static readonly JsonSerializerOptions Options;
 
 
-        //Tells the serializer that if it gets a list of Basic Users it needs to note
+        //Tells the serializer that if it gets a list of Basic Users or Account it needs to note
         //each individual objects actual type, and write a property for it to identify
         //the type upon deserialization
         static JsonHelpers()
@@ -33,6 +34,18 @@ namespace BankingApp.Utilities
                         {
                             new JsonDerivedType(typeof(User), nameof(User)),
                             new JsonDerivedType(typeof(Admin), nameof(Admin))
+                        }
+                    };
+                }
+                else if (ti.Type == typeof(Account))
+                {
+                    ti.PolymorphismOptions = new JsonPolymorphismOptions
+                    {
+                        TypeDiscriminatorPropertyName = $"type",
+                        IgnoreUnrecognizedTypeDiscriminators = false,
+                        DerivedTypes =
+                        {
+                            new JsonDerivedType(typeof(SavingsAccount), nameof(SavingsAccount))
                         }
                     };
                 }
@@ -58,7 +71,7 @@ namespace BankingApp.Utilities
             {
                 string json;
 
-                if(listToSave is List<BasicUser>)
+                if(listToSave is List<BasicUser> || listToSave is List<Account>)
                 {
                     json = JsonSerializer.Serialize(listToSave, Options);
                 }
@@ -76,7 +89,7 @@ namespace BankingApp.Utilities
         }
 
         /// <summary>
-        /// Loads a list, if list is of type BasicUser applies polymorphism options
+        /// Loads a list, if list is of type BasicUser or Account applies polymorphism options
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="filepath">the path from which to load</param>
@@ -90,7 +103,7 @@ namespace BankingApp.Utilities
                 if (File.Exists(filepath))
                 {
                     string json = File.ReadAllText(filepath);
-                    if (typeof(T) == typeof(BasicUser))
+                    if (typeof(T) == typeof(BasicUser) || typeof(T) == typeof(Account))
                     {
                         toLoad = JsonSerializer.Deserialize<List<T>>(json, Options) ?? new List<T>();
                     }

@@ -9,6 +9,10 @@ namespace BankingApp.Utilities
     internal class InputHelpers
     {
 
+        /// <summary>
+        /// Validates string input
+        /// </summary>
+        /// <returns>a valid string</returns>
         public static string ValidString()
         {
             while (true)
@@ -28,6 +32,10 @@ namespace BankingApp.Utilities
             }
         }
 
+        /// <summary>
+        /// Takes input from user, masking the input as the user writes in a standard password way
+        /// </summary>
+        /// <returns>the inputted password as a lowercase string</returns>
         public static string InputPassword()
         {
             List<char> chars = new List<char>();

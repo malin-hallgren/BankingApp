@@ -36,6 +36,11 @@ namespace BankingApp.Users
             return $"Name: {Name}\nUsername: {UserName}\nPhone Number: {PhoneNumber}\nEmail Address: {EmailAddress}";
         }
 
+        /// <summary>
+        /// Takes the two first letters of every name inputted and turns them into a username. Increments if name already exists
+        /// </summary>
+        /// <param name="user">The user for which to generate a username</param>
+        /// <returns>string containing new username</returns>
         public static string GenerateUsername(User user)
         {
             string[] parts = user.Name.Trim().Split(' ');
@@ -58,6 +63,7 @@ namespace BankingApp.Users
             return userName;
         }
 
+        [Obsolete("overly complicated, just preform a normal cast instead")]
         public static BasicUser GetUserType(BasicUser user)
         {
             if (user is User)
@@ -92,7 +98,7 @@ namespace BankingApp.Users
             bool ongoingLogin = true;
             int attempts = 0;
             var loginStatus = new PasswordVerificationResult();
-            string blockedMessage = $"The account has been blocked due to repeated failed access attempts. Please contact an admin";
+            string[] blockedMessage = { "The account has been ", "BLOCKED", " due to repeated failed access attempts. Please contact an admin" };
             BasicUser? loginUser = null;
 
             while (ongoingLogin)
@@ -106,13 +112,18 @@ namespace BankingApp.Users
                     loginUser = users.Find(x => x.UserName.Contains(username));
                     Console.Clear();
 
-                    //Break out to method CheckBlock?
                     if (loginUser is User)
                     {
                         User current = (User)loginUser;
                         if (current.IsBlocked)
                         {
-                            Console.WriteLine(blockedMessage);
+                            OutputHelpers.HighlightFragment(blockedMessage[0], blockedMessage[1], blockedMessage[2], ConsoleColor.DarkRed);
+
+                            Admin admin = users.OfType<Admin>().First();
+                            Console.WriteLine("\n");
+                            admin.PrintContactInfo();
+
+                            Console.ReadLine();
                             break;
                         }
                     }
@@ -129,7 +140,9 @@ namespace BankingApp.Users
                         if (loginStatus == PasswordVerificationResult.Failed)
                         {
                             Console.Clear();
-                            Console.WriteLine($"Incorrect password entered. You have {3 - attempts} attempts left.");
+                            Console.Write($"Incorrect password entered. You have ");
+                            OutputHelpers.Highlight($"{3 - attempts}", ConsoleColor.DarkRed);
+                            Console.Write(" attempts left. ");
                             continue;
                         }
                         else
@@ -147,7 +160,21 @@ namespace BankingApp.Users
 
                         User currentUser = (User)loginUser;
                         currentUser.IsBlocked = true;
-                        Console.WriteLine(blockedMessage);
+                        OutputHelpers.HighlightFragment(blockedMessage[0], blockedMessage[1], blockedMessage[2], ConsoleColor.DarkRed);
+
+                        Admin admin = users.OfType<Admin>().First();
+                        Console.WriteLine("\n");
+                        admin.PrintContactInfo();
+
+                        Console.ReadLine();
+                    }
+
+                    else if (attempts >= 3 && loginUser is Admin)
+                    {
+                        Console.Clear();
+
+                        OutputHelpers.Highlight("Please contact the IT Department.", ConsoleColor.DarkRed);
+                        Console.ReadLine();
                     }
                     break;
                 }

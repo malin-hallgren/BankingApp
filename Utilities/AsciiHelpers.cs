@@ -10,6 +10,10 @@ namespace BankingApp.Utilities
     {
         public static string LogoPath { get; private set; } = "../../../Utilities/Logo.txt";
 
+        /// <summary>
+        /// Prints everything from a file
+        /// </summary>
+        /// <param name="path">filepath to print from</param>
         public static void PrintAscii(string path)
         {
             string? toPrint = File.ReadAllText(path);

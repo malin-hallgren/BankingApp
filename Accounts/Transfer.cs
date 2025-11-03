@@ -8,6 +8,7 @@ using MailKit;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
+using BankingApp.Utilities;
 
 namespace BankingApp.Accounts
 {
@@ -31,16 +32,12 @@ namespace BankingApp.Accounts
             BankApp.AddToTransferList(this);
         }
 
+        /// <summary>
+        /// Sends an email to the owner of the account which the transfer is made from
+        /// </summary>
         public void SendMail()
         {
-            // TODO : Add implementation 
-
-            //Added here so that we all can have a look at it. If we want to use this we will need another package
-            //MailKit, for some of the methods as the .NET standard one is old, and shitty. Everyone also needs to
-            //either set up environment variables targeting my user on SMTP2GO, or set up your own user. This will NOT
-            //carry over to anyone downloading it, and would then normally be set server side if this was published... but it works 
-            //locally for us like this at least :'). Feel free to delete if we do not want this /MH
-
+            //Note: Aldor, when testing this, you need this file or the mail won't send. Reach out if you want to verify function.
             string[] auth = File.ReadAllLines("../../../Utilities/Environment.env");
 
             string? smtpUser = auth[0];
@@ -91,6 +88,9 @@ namespace BankingApp.Accounts
             ;
         }
 
+        /// <summary>
+        /// Deducts and adds specified sum to correct accounts
+        /// </summary>
         public void ExecuteTransfer()
         {
             To.Balance += Amount;

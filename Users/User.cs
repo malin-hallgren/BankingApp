@@ -43,7 +43,7 @@ namespace BankingApp.Users
         {
             foreach (var a in accountList)
             {
-                Console.WriteLine(a);
+                // TODO: add implementation when Account Class is done.                
             }
 
         }

@@ -1,16 +1,16 @@
-﻿using System;
+﻿using BankingApp.Accounts;
+using BankingApp.UI;
+using BankingApp.Users;
+using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using System.Timers;
-using BankingApp.Users;
-using BankingApp.Accounts;
-using BankingApp.Utilities;
-using System.Runtime.CompilerServices;
 
-namespace BankingApp
+namespace BankingApp.Utilities
 {
     internal class BankApp
     {
@@ -47,6 +47,34 @@ namespace BankingApp
             AsciiHelpers.PrintAscii(AsciiHelpers.LogoPath);
             Console.ReadLine();
             Console.Clear();
+
+            while (IsRunning)
+            {
+                (BasicUser?, bool) loginData = Login.Start();
+
+                if (loginData.Item2)
+                {
+                    var currentUser = loginData.Item1;
+
+                    if (currentUser != null)
+                    {
+                        if (currentUser is Admin)
+                        {
+                            var admin = currentUser as Admin;
+                            AdminUI.Start();
+                        }
+                        else
+                        {
+                            var user = currentUser as User;
+                            CustomerUI.Start(user);
+                        }
+                    }
+                }
+
+            }
+
+            Console.ReadLine();
+            Exit();
         }
 
         /// <summary>
@@ -57,6 +85,8 @@ namespace BankingApp
             IsRunning = false;
             Console.Clear();
             JsonHelpers.SaveList(Users, _filePathUsers);
+
+            AsciiHelpers.PrintAscii(AsciiHelpers.LogoPath);
             Console.WriteLine("Thank you for using *REDACTED* Bank! We look forward to your next visit!");
             Environment.Exit(0);
         }
@@ -82,11 +112,20 @@ namespace BankingApp
             JsonHelpers.SaveList(Users, _filePathUsers);
         }
 
+
+        /// <summary>
+        /// Gets a copy of the Transfer list
+        /// </summary>
+        /// <returns>a copy of the PendingTransfers list</returns>
         public static List<Transfer> GetTransferList()
         {
             return new List<Transfer>(PendingTransfer);
         }
 
+        /// <summary>
+        /// Adds to the PendingTransfers list
+        /// </summary>
+        /// <param name="transfer">The transfer to add to the list</param>
         public static void AddToTransferList(Transfer transfer)
         {
             PendingTransfer.Add(transfer);
@@ -108,7 +147,7 @@ namespace BankingApp
         /// </summary>
         /// <param name="source">The object from which this is sent, in our case, the timer</param>
         /// <param name="time">Data for the ElapsedEvent from the timer, in this case, just a time</param>
-        private static void SendPendingTransactions(Object? source, ElapsedEventArgs time)
+        private static void SendPendingTransactions(object? source, ElapsedEventArgs time)
         {
             foreach (var transfer in PendingTransfer)
                 {

@@ -1,13 +1,14 @@
-﻿using System;
+﻿using BankingApp.Accounts;
+using BankingApp.UI;
+using BankingApp.Users;
+using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using System.Timers;
-using BankingApp.Users;
-using BankingApp.Accounts;
-using System.Runtime.CompilerServices;
 
 namespace BankingApp.Utilities
 {
@@ -46,6 +47,34 @@ namespace BankingApp.Utilities
             AsciiHelpers.PrintAscii(AsciiHelpers.LogoPath);
             Console.ReadLine();
             Console.Clear();
+
+            while (IsRunning)
+            {
+                (BasicUser?, bool) loginData = Login.Start();
+
+                if (loginData.Item2)
+                {
+                    var currentUser = loginData.Item1;
+
+                    if (currentUser != null)
+                    {
+                        if (currentUser is Admin)
+                        {
+                            var admin = currentUser as Admin;
+                            AdminUI.Start();
+                        }
+                        else
+                        {
+                            var user = currentUser as User;
+                            CustomerUI.Start(user);
+                        }
+                    }
+                }
+
+            }
+
+            Console.ReadLine();
+            Exit();
         }
 
         /// <summary>

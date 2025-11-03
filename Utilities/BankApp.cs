@@ -45,6 +45,8 @@ namespace BankingApp.Utilities
             
             // We need to save a transaction log, and the sum, and boot them here too
             AsciiHelpers.PrintAscii(AsciiHelpers.LogoPath);
+            Console.CursorVisible = false;
+            Console.WriteLine("Press ENTER to continue to Login...");
             Console.ReadLine();
             Console.Clear();
 

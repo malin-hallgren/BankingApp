@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,7 +39,7 @@ namespace BankingApp.Utilities
             {
                 string? input = Console.ReadLine();
 
-                if (Decimal.TryParse(input, out var value))
+                if (Decimal.TryParse(input, CultureInfo.InvariantCulture, out var value))
                 {
                     return value;
                 }

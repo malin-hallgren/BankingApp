@@ -10,9 +10,7 @@ namespace BankingApp.Utilities
 {
     internal class Menu
     {
-        public static int SelectedIndex = 0;
-
-        private static void DisplayOptions(string[] options, string title) // Private as it will only be called from "Run"
+        private static void DisplayOptions(string[] options, string title, int selected) // Private as it will only be called from "Run"
         {
             Console.WriteLine($"{title}\n");
 
@@ -20,7 +18,7 @@ namespace BankingApp.Utilities
             {
                 string currentOption = options[i];
 
-                if (i == SelectedIndex)
+                if (i == selected)
                 {
                     Console.ForegroundColor = ConsoleColor.Black;
                     Console.BackgroundColor = ConsoleColor.White;
@@ -45,14 +43,15 @@ namespace BankingApp.Utilities
 
             ConsoleKey keyPressed = 0;
 
-            int prevIndex = SelectedIndex;
+            int selectedIndex = 0;
+            int prevIndex = selectedIndex;
 
             // Runs until Enter is pressed
             while (keyPressed != ConsoleKey.Enter)
             {
                 
                 Console.Clear(); // Clears the console each loop
-                DisplayOptions(options, title); // Calls the Display method
+                DisplayOptions(options, title, selectedIndex); // Calls the Display method
 
                 // Reads the key pressed by the user and stores it in "keyPressed"
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true);
@@ -60,34 +59,34 @@ namespace BankingApp.Utilities
 
                 if (keyPressed == ConsoleKey.UpArrow)
                 {
-                    prevIndex = SelectedIndex;
-                    SelectedIndex--;
+                    prevIndex = selectedIndex;
+                    selectedIndex--;
 
                     // If you go under first menu option, move to last index
-                    if (SelectedIndex == -1)
+                    if (selectedIndex == -1)
                     {
-                        SelectedIndex = options.Length - 1;
+                        selectedIndex = options.Length - 1;
                     }
-                    ClearLines(prevIndex, SelectedIndex);
+                    ClearLines(prevIndex, selectedIndex);
                 }
 
                 else if (keyPressed == ConsoleKey.DownArrow)
                 {
-                    prevIndex = SelectedIndex;
-                    SelectedIndex++;
+                    prevIndex = selectedIndex;
+                    selectedIndex++;
 
                     // If you go over last menu option, move to first index
-                    if (SelectedIndex > options.Length - 1)
+                    if (selectedIndex > options.Length - 1)
                     {
-                        SelectedIndex = 0;
+                        selectedIndex = 0;
                     }
-                    ClearLines(prevIndex, SelectedIndex);
+                    ClearLines(prevIndex, selectedIndex);
                 }
             }
 
             Console.CursorVisible = true;
             // Returns the index of the selected option when Enter is pressed (perfect for switch cases)
-            return SelectedIndex;
+            return selectedIndex;
         }
 
         private static void ClearLines(int prev, int current)
@@ -98,12 +97,11 @@ namespace BankingApp.Utilities
             Console.Write(new string(' ', Console.BufferWidth));
         }
 
-        //Specific Menus below
-
-        
 
         public static void ReturnToStart(BasicUser user)
         {
+            Console.CursorVisible = false;
+            Console.WriteLine("\nPress ENTER to return to menu...");
             if (user.GetType() == typeof(User))
             {
                 Console.ReadLine();
@@ -121,7 +119,7 @@ namespace BankingApp.Utilities
 
         public static void ReturnToLogin()
         {
-            Console.WriteLine("Logged out successfully. Please log in again if you wish to continue.\nPress ENTER to continue...");
+            Console.WriteLine("Logged out successfully. Please log in again if you wish to continue.\n\nPress ENTER to continue...");
         }
     }
 }

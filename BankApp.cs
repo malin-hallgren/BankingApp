@@ -1,14 +1,15 @@
-﻿using System;
+﻿using BankingApp.Accounts;
+using BankingApp.UI;
+using BankingApp.Users;
+using BankingApp.Utilities;
+using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using System.Timers;
-using BankingApp.Users;
-using BankingApp.Accounts;
-using BankingApp.Utilities;
-using System.Runtime.CompilerServices;
 
 namespace BankingApp
 {
@@ -24,7 +25,7 @@ namespace BankingApp
 
 
         /// <summary>
-        /// Sets variables at their start state, loads needed files
+        /// Sets variables at their start state, loads needed files, does everything, then quits
         /// </summary>
         public static void Startup()
         {
@@ -47,6 +48,37 @@ namespace BankingApp
             AsciiHelpers.PrintAscii(AsciiHelpers.LogoPath);
             Console.ReadLine();
             Console.Clear();
+
+            Run();
+            Console.ReadLine();
+            Exit();
+        }
+
+        public static void Run()
+        {
+            while (IsRunning)
+            {
+                (BasicUser?, bool) loginData = Login.Start();
+
+                if (loginData.Item2)
+                {
+                    var currentUser = loginData.Item1;
+
+                    if (currentUser != null)
+                    {
+                        if (currentUser is Admin)
+                        {
+                            var admin = currentUser as Admin;
+                            AdminUI.Start();
+                        }
+                        else
+                        {
+                            var user = currentUser as User;
+                            CustomerUI.Start(user);
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>

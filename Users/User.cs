@@ -114,6 +114,10 @@ namespace BankingApp.Users
         //    return loanList.ToList();
         //}
 
+        public List<Account> GetAccounts()
+        {
+            return new List<Account>(accountList);
+        }
 
         /// <summary>
         /// Opens a new account of the specified type and currency.

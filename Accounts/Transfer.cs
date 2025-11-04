@@ -21,16 +21,16 @@ namespace BankingApp.Accounts
         public Account From { get; set; }
         public Account To { get; set; }
 
-        public Transfer(decimal amount, DateTime date, Account from, Account to, string message = "")
+        public Transfer(decimal amount, Account from, Account to, string? message = "")
         {
             Amount = amount;
             TransactionMessage = message;
-            Date = date;
             From = from;
             To = to;
             TransactionID = Guid.NewGuid();
             BankApp.AddToTransferList(this);
         }
+
 
         /// <summary>
         /// Sends an email to the owner of the account which the transfer is made from

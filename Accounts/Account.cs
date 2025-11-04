@@ -38,7 +38,8 @@ namespace BankingApp.Accounts
 
         public override string ToString()
         {
-            return $"Account Number: {AccountNumber}, Balance: {Balance} {Currency}, Owner: {Owner.Name}";
+            return $"Account Number: {AccountNumber}, Balance: {Balance}, Currency: {Currency}, Owner: {Owner.Name}";
         }
     }
 }
+ 

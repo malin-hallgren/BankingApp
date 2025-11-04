@@ -13,7 +13,7 @@ namespace BankingApp.UI
     internal class AdminUI
     {
         // This is called with AdminUI.Start
-        public static void Start(Admin admin)
+        public static bool Start(Admin admin)
         {
             
             string prompt = "Admin Menu"; 
@@ -33,36 +33,30 @@ namespace BankingApp.UI
             {
                 case 0:
                     Admin.CreateUser();
-                    Menu.ReturnToStart(admin);
-                    break;
-
+                    Menu.ReturnToStart();
+                    return true;
                 case 1:
                     List<BasicUser> users = BankApp.GetUserList();
                     OutputHelpers.PrintList(users);
-                    Menu.ReturnToStart(admin);
-                    break;
-
+                    Menu.ReturnToStart();
+                    return true;
                 case 2:
                     Console.WriteLine("Update Currencies - Coming soon!");
-                    Menu.ReturnToStart(admin);
-                    // Update currencies
-                    break;
-
+                    Menu.ReturnToStart();
+                    return true;
                 case 3:
                     Console.WriteLine("Input new interest");
                     var input = InputHelpers.ValidDecimal();
                     admin.UpdateInterestForAllLoans(BankApp.GetUserList(), input);
-                    Menu.ReturnToStart(admin);
-                    break;
+                    Menu.ReturnToStart();
+                    return true;
                 case 4:
                     Menu.ReturnToLogin();
-                    return;
-
+                    return false;
                 default:
-                    // If error somehow
-                    break;
+                    return true;
             }
 
-            }    
+        }    
     }
 }

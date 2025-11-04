@@ -63,12 +63,22 @@ namespace BankingApp.Utilities
                         if (currentUser is Admin)
                         {
                             var admin = currentUser as Admin;
-                            AdminUI.Start(admin);
+                            bool runAdmin = true;
+
+                            do
+                            {
+                                runAdmin = AdminUI.Start(admin);
+                            } while (runAdmin);
                         }
                         else
                         {
                             var user = currentUser as User;
-                            CustomerUI.Start(user);
+                            bool runUser = true;
+
+                            do
+                            {
+                                runUser = CustomerUI.Start(user);
+                            } while (runUser);
                         }
                     }
                 }

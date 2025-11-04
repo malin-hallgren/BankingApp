@@ -10,7 +10,7 @@ namespace BankingApp.UI
 {
     internal class CustomerUI
     {
-        public static void Start(User user)
+        public static bool Start(User user)
         {
 
             string UserPrompt = "Customer Menu ";
@@ -30,32 +30,31 @@ namespace BankingApp.UI
             {
                 case 0:
                     user.PrintActionLog();
-                    Menu.ReturnToStart(user);
-                    break;
+                    Menu.ReturnToStart();
+                    return true;
                 case 1:
                     user.PrintAccounts();
-                    Menu.ReturnToStart(user);
-                    break;
+                    Menu.ReturnToStart();
+                    return true;
                 case 2:
                     Console.WriteLine("Please specify the size of loan which you would like:");
                     decimal loanSize = InputHelpers.ValidDecimal();
                     user.RequestLoan(loanSize, user);
-                    Menu.ReturnToStart(user);
-                    // Request Loan
-                    break;
+                    Menu.ReturnToStart();
+                    return true;
 
                 case 3:
                     Console.WriteLine("Open Account - Coming Soon");
-                    Menu.ReturnToStart(user);
-                    // Open Account
-                    break;
+                    //Open Acoount
+                    Menu.ReturnToStart();
+                    return true;
                 case 4:
                     Menu.ReturnToLogin();
-                    return;
+                    return false;
 
                 default:
                     // If error somehow
-                    break;
+                    return true;
             }
         }
     }

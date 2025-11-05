@@ -45,8 +45,20 @@ namespace BankingApp.Utilities
                 }
                 else
                 {
+                    Console.CursorVisible = false;
                     Console.WriteLine("Please input a valid number.\nPress ENTER to try again...");
                     Console.ReadLine();
+
+                    Console.SetCursorPosition(0, 1);
+                    Console.Write(new string(' ', Console.BufferWidth));
+                    Console.SetCursorPosition(0, 2);
+                    Console.Write(new string(' ', Console.BufferWidth));
+                    Console.SetCursorPosition(0, 3);
+                    Console.Write(new string(' ', Console.BufferWidth));
+
+                    Console.SetCursorPosition(0, 1);
+                    Console.CursorVisible = true;
+
                 }
             }
         }

@@ -42,7 +42,23 @@ namespace BankingApp.Utilities
 
                 Console.Clear();
             }
-            
+
+            foreach (var user in Users)
+            {
+                if (user.GetType() == typeof(User))
+                {
+                    var customer = (User)user;
+                    foreach (var account in customer.GetAccounts())
+                    {
+                        account.Owner = customer;
+                    }
+                    foreach (var loan in customer.GetLoans())
+                    {
+                        loan.Owner = customer;
+                    }
+                }
+            }
+
             // We need to save a transaction log, and the sum, and boot them here too
             AsciiHelpers.PrintAscii(AsciiHelpers.LogoPath);
             Console.CursorVisible = false;
@@ -63,12 +79,22 @@ namespace BankingApp.Utilities
                         if (currentUser is Admin)
                         {
                             var admin = currentUser as Admin;
-                            AdminUI.Start(admin);
+                            bool runAdmin = true;
+
+                            do
+                            {
+                                runAdmin = AdminUI.Start(admin);
+                            } while (runAdmin);
                         }
                         else
                         {
                             var user = currentUser as User;
-                            CustomerUI.Start(user);
+                            bool runUser = true;
+
+                            do
+                            {
+                                runUser = CustomerUI.Start(user);
+                            } while (runUser);
                         }
                     }
                 }

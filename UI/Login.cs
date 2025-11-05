@@ -29,11 +29,9 @@ namespace BankingApp.UI
                     Console.Clear();
                     return user;
                 case 1:
-                    Console.Clear();
                     BankApp.Exit();
                     return (null, false);
                 default:
-                    Console.Clear();
                     BankApp.Exit();
                     return (null, false);
             }

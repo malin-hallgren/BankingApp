@@ -20,6 +20,12 @@ namespace BankingApp.Users
         private decimal Sum;
         public uint CreditScore { get; set; }
 
+
+        public User()
+        {
+            accountList = new List<Account>();
+            loanList = new List<Loan>();
+        }
         public User(string userName, string name, string phoneNumber, string emailAddress, string password, bool isBlocked, uint creditScore) : base(userName, name, phoneNumber, emailAddress, password)
         {
             accountList = new List<Account>();
@@ -40,6 +46,8 @@ namespace BankingApp.Users
                 {
                     Console.WriteLine(log);
                 }
+
+                Console.WriteLine(new string('_', Console.BufferWidth)+ "\n");
             }
         }
 

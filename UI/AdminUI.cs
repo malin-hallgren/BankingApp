@@ -23,6 +23,7 @@ namespace BankingApp.UI
                 "Display all users",
                 "Update currencies",
                 "Update Interest Rates",
+                "Show Bank Data",
                 "Log out"
             };
 
@@ -51,6 +52,10 @@ namespace BankingApp.UI
                     Menu.ReturnToStart();
                     return true;
                 case 4:
+                    BankApp.PrintStatistics();
+                    Menu.ReturnToStart();
+                    return true;
+                case 5:
                     Menu.ReturnToLogin();
                     return false;
                 default:

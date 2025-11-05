@@ -20,7 +20,14 @@ namespace BankingApp.Accounts
         [JsonIgnore]
         public User Owner { get; set; }
 
+        [JsonInclude]
         private List<Transfer> logList;
+
+       
+        public Account()
+        {
+            logList = new List<Transfer>();
+        }
 
         public Account(string accountName, string currency, User owner, decimal balance = 0)
         {
@@ -36,7 +43,12 @@ namespace BankingApp.Accounts
             return new List<Transfer>(logList);
         }
 
-        public void CreateTransfer(User user)
+        public void AddToLogList(Transfer toAdd)
+        {
+            logList.Add(toAdd);
+        }
+
+        public static void CreateTransfer(User user)
         {
             Account[] temp = user.GetAccounts().Where(x => x.GetType() != typeof(SavingsAccount)).ToArray();
             string[] userAccounts = Array.ConvertAll(temp, x => x.ToString());
@@ -55,12 +67,13 @@ namespace BankingApp.Accounts
                 }
             }
 
-            Account to = allAccounts[selected];
-
             temp = allAccounts.ToArray();
             string[] allUserAccounts = Array.ConvertAll(temp, x => x.ToString());
 
             selected = Menu.Run(allUserAccounts, "To which account do you wish to transfer money?");
+            Account to = allAccounts[selected];
+
+
             
 
             Console.Clear();
@@ -92,8 +105,7 @@ namespace BankingApp.Accounts
 
             var transfer = new Transfer(amount, from, to, message);
 
-            logList.Add(transfer);
-            BankApp.AddToTransferList(transfer);
+            Console.WriteLine($"Transfers are sent every {BankApp.Interval} minutes. Your balance will change and the transaction will be displayed in your logs shortly!");
         }
 
         public void Deposit(decimal amount)
@@ -103,7 +115,7 @@ namespace BankingApp.Accounts
         }
         public override string ToString()
         {
-            return $"Account Name: {AccountName}, Balance: {Balance}, Currency: {Currency}, Owner: {Owner.Name}, {AccountNumber}";
+            return $"Account name: {accountName}\nBalance: {Balance}\nCurrency: {Currency}\nOwner: {Owner.Name}\nAccount Number: {AccountNumber}";
         }
     }
 }

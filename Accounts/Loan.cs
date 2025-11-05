@@ -26,10 +26,28 @@ namespace BankingApp.Accounts
         /// <exception cref="InvalidOperationException">Thrown if the owner's credit score is less than 100.</exception>
         public Loan(User owner, decimal size)
         {
-            if (owner.CreditScore < 100)
+            if (owner.CreditScore < 100 || size > owner.GetSum() * 5)
             {
-                throw new InvalidOperationException("Loan denied due to low creditscore.");
+                string message = String.Empty;
+
+                if (owner.CreditScore < 100)
+                {
+                    message += "Loan denied due to low creditscore.\n";
+                }
+                if (size > owner.GetSum() * 5)
+                {
+                    message += $"Loan cannot be larger than five times the total sum of your money in the bank.";
+                }
+
+                if(String.IsNullOrWhiteSpace(message))
+                {
+                    message += "Invalid loan";
+                }
+
+                throw new InvalidOperationException(message);
             }
+
+            
 
             Size = size;
             Owner = owner;

@@ -58,27 +58,18 @@ namespace BankingApp.Users
         /// <param name="loansize">The amount of the loan requested. Must be a positive decimal value.</param>
         public void RequestLoan(decimal loansize, User user)
         {
-
-            if (loansize <= user.Sum * 5)
+            try
             {
-                Console.WriteLine($"Loan cannot be larger than five times the total sum of your money in the bank. {user.Sum * 5}");
-                Console.ReadLine();
+                Loan l = new Loan(this, loansize);
+                Console.WriteLine("Loan was successfully approved and added to your list of loans!:" + l);
+                loanList.Add(l);
+
             }
-            else
+            catch (InvalidOperationException ex)
             {
-
-                try
-                {
-                    Loan l = new Loan(this, loansize);
-                    Console.WriteLine("Loan was successfully approved and added to your list of loans!:" + l);
-                    loanList.Add(l);
-
-                }
-                catch (InvalidOperationException ex)
-                {
-                    Console.WriteLine($"Loan denied: {ex.Message}");
-                }
+                Console.WriteLine($"Loan denied: {ex.Message}");
             }
+            
         }
 
         /// <summary>
@@ -119,6 +110,15 @@ namespace BankingApp.Users
         public List<Account> GetAccounts()
         {
             return new List<Account>(accountList);
+        }
+
+        public decimal GetSum()
+        {
+            foreach (var a in accountList)
+            {
+                Sum += a.Balance;
+            }
+            return Sum;
         }
 
         /// <summary>

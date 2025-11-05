@@ -22,8 +22,10 @@ namespace BankingApp.Utilities
         private static System.Timers.Timer _transferTimer = new System.Timers.Timer(Interval * 60000/10);
         private static readonly object _pendingLock = new object();
         private static PasswordHasher<BasicUser> Hasher {  get; set; } = new PasswordHasher<BasicUser>();
+
         private static readonly string _filePathTransfers = "Transfers.json";
-        private static Dictionary<Guid, string> Transfers = new Dictionary<Guid, string>();
+        private static List<Transfer> Transfers = new List<Transfer>();
+
         private static readonly string _filPathSum = "TransferSum.json";
         private static decimal TransferSum;
         public static bool IsRunning { get; private set; }
@@ -89,7 +91,65 @@ namespace BankingApp.Utilities
         private static void Setup()
         {
             Users = JsonHelpers.LoadList<BasicUser>(_filePathUsers);
-            Transfers = JsonHelpers.LoadDict<Guid, string>(_filePathTransfers);
+            Transfers = JsonHelpers.LoadList<Transfer>(_filePathTransfers);
+            List<Account> allAccounts = new List<Account>();
+
+            foreach (var user in Users)
+            {
+                if (user.GetType() == typeof(User))
+                {
+                    var customer = (User)user;
+                    foreach (var account in customer.GetAccounts())
+                    {
+                        account.Owner = customer;
+                        allAccounts.Add(account);
+                        
+                    }
+                    foreach (var loan in customer.GetLoans())
+                    {
+                        loan.Owner = customer;
+                    }
+                }
+            }
+
+            foreach (var transfer in Transfers)
+            {
+                try
+                {
+                    transfer.To = allAccounts.Find(x => x.AccountNumber == transfer.ToID);
+                    if (transfer.To == null)
+                    {
+                        throw new InvalidOperationException("To account doesn't exist");
+                    }
+                    else
+                    {
+                        transfer.To.AddToLogList(transfer);
+                    }     
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
+                try
+                {
+                    transfer.From = allAccounts.Find(x => x.AccountNumber == transfer.ToID);
+                    if(transfer.From == null)
+                    {
+                        throw new InvalidOperationException("From account doesn't exist");
+                    }
+                    else
+                    {
+                        transfer.From.AddToLogList(transfer);
+                    }     
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                
+                
+            }
 
             if (File.Exists(_filPathSum))
             {
@@ -113,34 +173,7 @@ namespace BankingApp.Utilities
                 JsonHelpers.SaveList(Users, _filePathUsers);
 
                 Console.Clear();
-            }
-
-            foreach (var user in Users)
-            {
-                if (user.GetType() == typeof(User))
-                {
-                    var customer = (User)user;
-                    foreach (var account in customer.GetAccounts())
-                    {
-                        account.Owner = customer;
-                        foreach (var log in account.GetLogList())
-                        {
-                            if (log.FromID == account.AccountNumber)
-                            {
-                                log.From = account;
-                            }
-                            else if (log.ToID == account.AccountNumber)
-                            {
-                                log.To = account;
-                            }
-                        }
-                    }
-                    foreach (var loan in customer.GetLoans())
-                    {
-                        loan.Owner = customer;
-                    }
-                }
-            }
+            } 
         }
 
         /// <summary>
@@ -191,11 +224,18 @@ namespace BankingApp.Utilities
             }
         }
 
+        /// <summary>
+        /// Prints statistics (transfers and the sum of them all)
+        /// </summary>
         public static void PrintStatistics()
         {
-            foreach(var kvp in Transfers)
+            //This is an escape sequence to force clear the entire console, rather than just what is visible
+            Console.Clear();
+            Console.WriteLine("\x1b[3J");
+
+            foreach (var transfer in Transfers)
             {
-                Console.WriteLine(kvp.Value);
+                Console.WriteLine(transfer);
                 Console.WriteLine(new string('_', Console.BufferWidth));
             }
 
@@ -252,7 +292,7 @@ namespace BankingApp.Utilities
                         File.WriteAllText(_filPathSum, json);
                         
                         
-                        Transfers.TryAdd(transfer.TransactionID, transfer.ToString());
+                        Transfers.Add(transfer);
 
                         transfer.From.AddToLogList(transfer);
                         transfer.To.AddToLogList(transfer);
@@ -263,7 +303,8 @@ namespace BankingApp.Utilities
                             transfer.SendMail();
                         }
                     }
-                    JsonHelpers.SaveDict<Guid, string>(_filePathTransfers, Transfers);
+                    
+                    JsonHelpers.SaveList(Transfers, _filePathTransfers);
 
                     PendingTransfer.Clear();
                 }

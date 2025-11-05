@@ -20,12 +20,12 @@ namespace BankingApp.Accounts
         public void ApplyInterest()
         {
             decimal interestAmount = (Balance * Interest) / 100;
-            Balance += interestAmount;  // Använder Account.Balance
+            Balance += interestAmount;  // Uses Account.Balance
         }
 
         public override string ToString()
         {
-            return $"{base.ToString()} | This savings account has an interest rate of: {Interest}%";
+            return $"{base.ToString()}This savings account has an interest rate of: {Interest}%\n";
         }
     }
 }

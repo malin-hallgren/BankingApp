@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BankingApp.Utilities.Enums;
 
 namespace BankingApp.UI
 {
@@ -46,6 +47,10 @@ namespace BankingApp.UI
 
                 case 3:
                     Console.WriteLine("Open Account - Coming Soon");
+                    AccountType accountType = CustomerAccount.ChooseAccountType();
+                    string currency = CustomerAccount.ChooseCurrency();
+                    user.OpenAccount(accountType, currency);
+                    Console.WriteLine($"Created {accountType} account with {currency} currency.");
                     Menu.ReturnToStart(user);
                     // Open Account
                     break;

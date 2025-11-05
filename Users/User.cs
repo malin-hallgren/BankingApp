@@ -20,7 +20,6 @@ namespace BankingApp.Users
         private decimal Sum;
         public uint CreditScore { get; set; }
 
-
         public User()
         {
             accountList = new List<Account>();
@@ -76,13 +75,11 @@ namespace BankingApp.Users
                 Loan l = new Loan(this, loansize);
                 Console.WriteLine("Loan was successfully approved and added to your list of loans!:" + l);
                 loanList.Add(l);
-
             }
             catch (InvalidOperationException ex)
             {
                 Console.WriteLine($"Loan denied: {ex.Message}");
-            }
-            
+            }            
         }
 
         /// <summary>
@@ -115,11 +112,7 @@ namespace BankingApp.Users
         {
             return new List<Loan>(loanList);
         }
-        //public IEnumerable<Loan> GetLoans()
-        //{
-        //    return loanList.ToList();
-        //}
-
+      
         public List<Account> GetAccounts()
         {
             return new List<Account>(accountList);

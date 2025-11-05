@@ -49,15 +49,12 @@ namespace BankingApp.Accounts
                 }
 
                 throw new InvalidOperationException(message);
-            }
-
-            
+            }            
 
             Size = size;
             Owner = owner;
             CalculateInterest(size);
-            owner.AddLoan(this);
-           
+            owner.AddLoan(this);           
         }
        
         public void AdminUpdateInterest(decimal interest)

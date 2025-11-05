@@ -21,6 +21,10 @@ namespace BankingApp.Users
 
         private static PasswordHasher<BasicUser> Hasher { get; set; } = new PasswordHasher<BasicUser>();
 
+        public BasicUser()
+        {
+
+        }
         // Constructor
         public BasicUser(string userName, string name, string phoneNumber, string emailAddress, string password)
         {

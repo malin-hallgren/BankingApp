@@ -1,11 +1,12 @@
 ﻿using BankingApp.Utilities;
 using BankingApp.Users;
+using BankingApp.Utilities.Enums;
+using BankingApp.Accounts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BankingApp.Utilities.Enums;
 
 namespace BankingApp.UI
 {
@@ -17,6 +18,7 @@ namespace BankingApp.UI
             string UserPrompt = "Customer Menu ";
             string[] options =
             {
+                "Transfer Money",
                 "Print Action Log",
                 "Print Accounts",
                 "Request Loan",
@@ -30,28 +32,32 @@ namespace BankingApp.UI
             switch (selectedIndex)
             {
                 case 0:
-                    user.PrintActionLog();
+                    Account.CreateTransfer(user);
                     Menu.ReturnToStart();
                     return true;
                 case 1:
-                    user.PrintAccounts();
+                    user.PrintActionLog();
                     Menu.ReturnToStart();
                     return true;
                 case 2:
+                    user.PrintAccounts();
+                    Menu.ReturnToStart();
+                    return true;
+                case 3:
                     Console.WriteLine("Please specify the size of loan which you would like:");
                     decimal loanSize = InputHelpers.ValidDecimal();
                     user.RequestLoan(loanSize, user);
                     Menu.ReturnToStart();
                     return true;
 
-              case 3:
+              case 4:
                     AccountType accountType = CustomerAccount.ChooseAccountType();
                     string currency = CustomerAccount.ChooseCurrency();
                     user.OpenAccount(accountType, currency);
                     Console.WriteLine($"\n{accountType} account created with {currency} currency.");
                     Menu.ReturnToStart();
                     return true;
-                case 4:
+                case 5:
                     Menu.ReturnToLogin();
                     return false;
 

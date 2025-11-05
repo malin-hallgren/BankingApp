@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 using System.Threading.Tasks;
 
@@ -54,6 +55,7 @@ namespace BankingApp.Utilities
             Options = new JsonSerializerOptions
             {
                 WriteIndented = true,
+                ReferenceHandler = ReferenceHandler.Preserve,
                 TypeInfoResolver = resolver
             };
         }
@@ -125,6 +127,44 @@ namespace BankingApp.Utilities
             }
 
             return toLoad;
+        }
+
+        public static Dictionary<TKey, TValue> LoadDict<TKey, TValue>(string path)
+        {
+            Dictionary<TKey, TValue> dictToLoadTo = new Dictionary<TKey, TValue>();
+            try
+            {
+                if (File.Exists(path))
+                {
+                    string json = File.ReadAllText(path);
+                    dictToLoadTo = JsonSerializer.Deserialize<Dictionary<TKey, TValue>>(json) ?? new Dictionary<TKey, TValue>();
+                }
+                else
+                {
+                    Console.WriteLine($"File {path} not found. Creating {path}...");
+                    SaveDict(path, dictToLoadTo);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"File {path} cannot be read: {ex.Message}\nOverwriting {path}...");
+                SaveDict(path, dictToLoadTo);
+            }
+
+            return dictToLoadTo;
+        }
+
+        public static void SaveDict<TKey, TValue>(string path, Dictionary<TKey, TValue> dictToSave)
+        {
+            try
+            {
+                string json = JsonSerializer.Serialize(dictToSave);
+                File.WriteAllText(path, json);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving file {path}: {ex.Message}");
+            }
         }
     }
 }

@@ -23,7 +23,7 @@ namespace BankingApp.Utilities
 
 
         // Convert currency from -> to
-        public static decimal Convert(decimal amount, string fromCurrency, string toCurrency)
+        public static (decimal, decimal) Convert(decimal amount, string fromCurrency, string toCurrency)
         {
             // Transform input to upper characters (if user writes usd instead of USD)   
             fromCurrency = fromCurrency.ToUpper();
@@ -40,7 +40,7 @@ namespace BankingApp.Utilities
             decimal convertedAmount = amountInSEK * _exchangeRates[toCurrency];
 
             // Rounds to x amount of decimals
-            return Math.Round(convertedAmount, 2);
+            return (Math.Round(convertedAmount, 2), amountInSEK);
         }
 
         // Set new exchangerate for a input currency (currency to change, new rate) (for Admin)

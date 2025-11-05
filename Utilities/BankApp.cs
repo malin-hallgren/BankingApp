@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Timers;
 
@@ -17,9 +18,14 @@ namespace BankingApp.Utilities
         private static readonly string _filePathUsers = "BasicUserList.json";
         private static List<BasicUser> Users = new List<BasicUser>();
         private static List<Transfer> PendingTransfer = new List<Transfer>();
-        private static System.Timers.Timer _transferTimer = new System.Timers.Timer(15 * 60000);
+        public static int Interval { get; private set; } = 1;
+        private static System.Timers.Timer _transferTimer = new System.Timers.Timer(Interval * 60000/10);
+        private static readonly object _pendingLock = new object();
         private static PasswordHasher<BasicUser> Hasher {  get; set; } = new PasswordHasher<BasicUser>();
-        public static decimal TransferSum;
+        private static readonly string _filePathTransfers = "Transfers.json";
+        private static Dictionary<Guid, string> Transfers = new Dictionary<Guid, string>();
+        private static readonly string _filPathSum = "TransferSum.json";
+        private static decimal TransferSum;
         public static bool IsRunning { get; private set; }
 
 
@@ -29,35 +35,9 @@ namespace BankingApp.Utilities
         public static void Startup()
         {
             IsRunning = true;
+            SetTransactionTimer();
 
-            Users = JsonHelpers.LoadList<BasicUser>(_filePathUsers);
-
-            if(!Users.Exists(x => x.GetType() == typeof(Admin)))
-            {
-                Console.WriteLine("No Admin exists, standard admin user generated. Please set a new password below:");
-                Admin admin = new Admin("Admin", "admin", "587634876538", "admin@redactedbank.se", "dummy");
-                admin.Password = BasicUser.PasswordHash(admin, InputHelpers.ValidString());
-                Users.Add(admin);
-                JsonHelpers.SaveList(Users, _filePathUsers);
-
-                Console.Clear();
-            }
-
-            foreach (var user in Users)
-            {
-                if (user.GetType() == typeof(User))
-                {
-                    var customer = (User)user;
-                    foreach (var account in customer.GetAccounts())
-                    {
-                        account.Owner = customer;
-                    }
-                    foreach (var loan in customer.GetLoans())
-                    {
-                        loan.Owner = customer;
-                    }
-                }
-            }
+            Setup();
 
             // We need to save a transaction log, and the sum, and boot them here too
             AsciiHelpers.PrintAscii(AsciiHelpers.LogoPath);
@@ -98,11 +78,69 @@ namespace BankingApp.Utilities
                         }
                     }
                 }
-
             }
-
             Console.ReadLine();
             Exit();
+        }
+
+        /// <summary>
+        /// Sets up and loads all the JSON files into correct objects
+        /// </summary>
+        private static void Setup()
+        {
+            Users = JsonHelpers.LoadList<BasicUser>(_filePathUsers);
+            Transfers = JsonHelpers.LoadDict<Guid, string>(_filePathTransfers);
+
+            if (File.Exists(_filPathSum))
+            {
+                string json = File.ReadAllText(_filPathSum) ?? new string("0");
+                TransferSum = JsonSerializer.Deserialize<decimal>(json);
+            }
+            else
+            {
+                TransferSum = 0;
+                string json = TransferSum.ToString();
+                json = JsonSerializer.Serialize(TransferSum);
+                File.WriteAllText(_filPathSum, json);
+            }
+
+            if (!Users.Exists(x => x.GetType() == typeof(Admin)))
+            {
+                Console.WriteLine("No Admin exists, standard admin user generated. Please set a new password below:");
+                Admin admin = new Admin("Admin", "admin", "587634876538", "admin@redactedbank.se", "dummy");
+                admin.Password = BasicUser.PasswordHash(admin, InputHelpers.ValidString());
+                Users.Add(admin);
+                JsonHelpers.SaveList(Users, _filePathUsers);
+
+                Console.Clear();
+            }
+
+            foreach (var user in Users)
+            {
+                if (user.GetType() == typeof(User))
+                {
+                    var customer = (User)user;
+                    foreach (var account in customer.GetAccounts())
+                    {
+                        account.Owner = customer;
+                        foreach (var log in account.GetLogList())
+                        {
+                            if (log.FromID == account.AccountNumber)
+                            {
+                                log.From = account;
+                            }
+                            else if (log.ToID == account.AccountNumber)
+                            {
+                                log.To = account;
+                            }
+                        }
+                    }
+                    foreach (var loan in customer.GetLoans())
+                    {
+                        loan.Owner = customer;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -147,7 +185,22 @@ namespace BankingApp.Utilities
         /// <returns>a copy of the PendingTransfers list</returns>
         public static List<Transfer> GetTransferList()
         {
-            return new List<Transfer>(PendingTransfer);
+            lock(_pendingLock)
+            {
+                return new List<Transfer>(PendingTransfer);
+            }
+        }
+
+        public static void PrintStatistics()
+        {
+            foreach(var kvp in Transfers)
+            {
+                Console.WriteLine(kvp.Value);
+                Console.WriteLine(new string('_', Console.BufferWidth));
+            }
+
+            Console.WriteLine(new string('_', Console.BufferWidth));
+            Console.WriteLine($"Total amount of money transferred in the bank (In SEK): {TransferSum}");
         }
 
         /// <summary>
@@ -156,7 +209,10 @@ namespace BankingApp.Utilities
         /// <param name="transfer">The transfer to add to the list</param>
         public static void AddToTransferList(Transfer transfer)
         {
-            PendingTransfer.Add(transfer);
+            lock (_pendingLock)
+            {
+                PendingTransfer.Add(transfer);
+            }
         }
 
         /// <summary>
@@ -165,7 +221,7 @@ namespace BankingApp.Utilities
         public static void SetTransactionTimer()
         {
             _transferTimer.Elapsed += SendPendingTransactions;
-            _transferTimer.AutoReset = true;
+            _transferTimer.AutoReset = false;
             _transferTimer.Enabled = true;
         }
 
@@ -176,22 +232,43 @@ namespace BankingApp.Utilities
         /// <param name="source">The object from which this is sent, in our case, the timer</param>
         /// <param name="time">Data for the ElapsedEvent from the timer, in this case, just a time</param>
         private static void SendPendingTransactions(object? source, ElapsedEventArgs time)
+        
         {
-            foreach (var transfer in PendingTransfer)
+            if (PendingTransfer.Count != 0)
+            { 
+                lock (_pendingLock)
                 {
-                    Console.WriteLine(transfer);
-                    transfer.ExecuteTransfer();
-                    transfer.Date = time.SignalTime;
-                    TransferSum += transfer.Amount;
+
+                    foreach (var transfer in PendingTransfer)
+                    {
+
+                        transfer.Date = time.SignalTime;
+                        transfer.AmountInSEK = transfer.ExecuteTransfer(transfer);
+
+                        
+                        TransferSum += transfer.AmountInSEK;
+                        string json = TransferSum.ToString();
+                        json = JsonSerializer.Serialize(TransferSum);
+                        File.WriteAllText(_filPathSum, json);
+                        
+                        
+                        Transfers.TryAdd(transfer.TransactionID, transfer.ToString());
+
+                        transfer.From.AddToLogList(transfer);
+                        transfer.To.AddToLogList(transfer);
+
+                        
+                        if(transfer.AmountInSEK >= 20000m)
+                        {
+                            transfer.SendMail();
+                        }
+                    }
+                    JsonHelpers.SaveDict<Guid, string>(_filePathTransfers, Transfers);
+
+                    PendingTransfer.Clear();
                 }
-
-            string message = $"The following transactions have been carried out at {time.SignalTime}";
-            foreach (var transfer in PendingTransfer)
-            {
-                Console.WriteLine(transfer);
-            } //How do we want to display this? Thinking a log for the admin, select the date, and upon selecting the time a list of the transactions?
-
-            PendingTransfer.Clear();
+            }
+            _transferTimer.Start();
         }
 
         [Obsolete("Asked more senior programmer, this is more hassle than it is worth. Use specific getters GetUserList, GetTransferList")]

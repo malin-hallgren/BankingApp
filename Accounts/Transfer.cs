@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using MailKit;
 using MailKit.Net.Smtp;
 using MailKit.Security;
@@ -17,16 +19,31 @@ namespace BankingApp.Accounts
         public Guid TransactionID {get; set;}
         public string TransactionMessage {get; set;}
         public decimal Amount { get; set; }
+        public decimal AmountInSEK { get; set; }
         public DateTime Date { get; set; }
+        [JsonIgnore]
         public Account From { get; set; }
+        
+        public Guid FromID {  get; set; }
+        [JsonIgnore]
         public Account To { get; set; }
+        
+        public Guid ToID { get; set; }
+
+
+        public Transfer()
+        {
+            TransactionID = Guid.NewGuid();
+        }
 
         public Transfer(decimal amount, Account from, Account to, string? message = "")
         {
             Amount = amount;
             TransactionMessage = message;
             From = from;
+            FromID = From.AccountNumber;
             To = to;
+            ToID = To.AccountNumber;
             TransactionID = Guid.NewGuid();
             BankApp.AddToTransferList(this);
         }
@@ -48,7 +65,7 @@ namespace BankingApp.Accounts
             try
             {
                 message.From.Add(new MailboxAddress("*REDACTED* Bank", smtpUser));
-                message.To.Add(MailboxAddress.Parse(To.Owner.EmailAddress));
+                message.To.Add(MailboxAddress.Parse(From.Owner.EmailAddress));
             }
             catch (Exception ex)
             {
@@ -56,10 +73,10 @@ namespace BankingApp.Accounts
             }
 
 
-            message.Subject = $"{To.Owner.Name} please check your account";
+            message.Subject = $"{From.Owner.Name} please check your account";
             message.Body = new TextPart("plain")
             {
-               Text = "Lol hej"
+               Text = $"Dear {From.Owner.Name},\nWe at *REDACTED* Bank care greatly for your security, and your finances. With this in mind we wish to inform you that there has been unusual activity on one of your accounts, or rather, a large transaction. We advice you to check your accounts, and reach out to us immediately, should something seem amiss.\n\nBest Regards,\nThe *REDACTED* Team"
             };
 
             using (var client = new SmtpClient())
@@ -91,15 +108,19 @@ namespace BankingApp.Accounts
         /// <summary>
         /// Deducts and adds specified sum to correct accounts
         /// </summary>
-        public void ExecuteTransfer()
+        /// <returns>the amount in SEK</returns>
+        public decimal ExecuteTransfer(Transfer transfer)
         {
-            To.Balance += Amount;
             From.Balance -= Amount;
+            (decimal, decimal) converted = ConvertCurrencies.Convert(transfer.Amount, transfer.From.Currency, transfer.To.Currency);
+            To.Balance += converted.Item1;
+
+            return converted.Item2;
         }
          
         public override string ToString()
         {
-            return $"Amount: {Amount} | Message: {TransactionMessage} | Date {Date} | From {From} | To {To}";
+            return $"Date {Date}\nAmount: {Amount}\nMessage: {TransactionMessage}\nFrom: {From}\nTo: {To}";
         }
 
 

@@ -20,7 +20,7 @@ namespace BankingApp.Users
         private decimal Sum;
         public uint CreditScore { get; set; }
 
-
+        //This is for JSON
         public User()
         {
             accountList = new List<Account>();
@@ -39,9 +39,13 @@ namespace BankingApp.Users
         /// </summary>
         public void PrintActionLog()
         {
+            //This is an escape sequence to force a complete wipe of the logs, since they can get long, and Clear() only clears the visible window
+            Console.Clear();
+            Console.WriteLine("\x1b[3J");
+
             foreach (var a in accountList)
             {
-                Console.WriteLine($"Action log for account {a.AccountName}:");
+                OutputHelpers.Highlight($"Action log for account {a.AccountNumber}:\n", ConsoleColor.DarkYellow);
                 foreach (var log in a.GetLogList())
                 {
                     Console.WriteLine(log);

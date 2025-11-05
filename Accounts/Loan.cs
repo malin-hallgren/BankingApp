@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace BankingApp.Accounts
 {
@@ -13,6 +15,8 @@ namespace BankingApp.Accounts
     {
         public decimal Size { get; set; }
         private  decimal LoanInterest { get; set; }
+
+        [JsonIgnore]
         public User Owner { get; set; }
         public double MortagePercent { get; set; }
 

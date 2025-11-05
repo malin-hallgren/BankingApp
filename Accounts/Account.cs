@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using BankingApp.Users;
 using BankingApp.Utilities;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace BankingApp.Accounts
 {
@@ -13,6 +15,8 @@ namespace BankingApp.Accounts
         public Guid AccountNumber { get; set; }
         public decimal Balance { get; set; }
         public string Currency { get; set; }
+
+        [JsonIgnore]
         public User Owner { get; set; }
 
         private List<Transfer> logList;

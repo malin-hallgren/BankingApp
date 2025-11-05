@@ -16,8 +16,8 @@ namespace BankingApp.Accounts
 {
     internal class Transfer
     {
-        public Guid TransactionID {get; set;}
-        public string TransactionMessage {get; set;}
+        public Guid TransactionID { get; set; }
+        public string TransactionMessage { get; set; }
         public decimal Amount { get; set; }
         public decimal AmountInSEK { get; set; }
         public DateTime Date { get; set; }
@@ -102,7 +102,6 @@ namespace BankingApp.Accounts
                     }
                 }
             }
-            ;
         }
 
         /// <summary>
@@ -117,12 +116,14 @@ namespace BankingApp.Accounts
 
             return converted.Item2;
         }
-         
+
         public override string ToString()
         {
+            if (From == To)
+            {
+                return $"Deposit amount: {Amount}";
+            }
             return $"Date {Date}\nAmount: {Amount}\nMessage: {TransactionMessage}\nFrom: {From}\nTo: {To}";
         }
-
-
     }
 }

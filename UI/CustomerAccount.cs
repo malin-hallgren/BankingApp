@@ -1,10 +1,11 @@
-﻿using System;
+﻿using BankingApp.Utilities;
+using BankingApp.Utilities.Enums;
+using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BankingApp.Utilities;
-using BankingApp.Utilities.Enums;
 namespace BankingApp.UI
 {
     internal class CustomerAccount
@@ -27,8 +28,7 @@ namespace BankingApp.UI
                 return AccountType.Normal;
             }
             else if (selectedIndex == 1)
-            {
-                
+            {                
                 Console.WriteLine("Creating savings account");
                 return AccountType.Savings;
             }
@@ -44,24 +44,11 @@ namespace BankingApp.UI
 
         public static string ChooseCurrency()
         {
+            int numberOfKeys = ConvertCurrencies.GetDictionary().Count;
             string prompt = "Which currency do you wish to use for your account?";
-            string[] options =
-            {
-                "SEK",
-                "USD",
-                "EUR",
-                "NOK",
-                "DKK",
-                "AUD",
-                "CAD"
-            };
-
+            string [] options = ConvertCurrencies.GetDictionary().Keys.ToArray();    
             int selectedIndex = Menu.Run(options, prompt);
-
             return options[selectedIndex];
-
-
-
         }
 
     }

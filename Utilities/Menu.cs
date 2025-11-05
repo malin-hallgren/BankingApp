@@ -58,8 +58,7 @@ namespace BankingApp.Utilities
 
             // Runs until Enter is pressed
             while (keyPressed != ConsoleKey.Enter)
-            {
-                
+            {                
                 Console.Clear(); // Clears the console each loop
                 DisplayOptions(options, title, selectedIndex); // Calls the Display method
 
@@ -118,7 +117,6 @@ namespace BankingApp.Utilities
                 return false;
             }
         }
-
 
         public static void ReturnToStart()
         {

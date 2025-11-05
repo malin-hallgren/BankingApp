@@ -1,4 +1,6 @@
 ﻿using BankingApp.Accounts;
+using BankingApp.Utilities;
+using BankingApp.Utilities.Enums;
 using Org.BouncyCastle.Bcpg;
 using System.Net.Mail;
 using System.Xml.Linq;
@@ -43,7 +45,7 @@ namespace BankingApp.Users
         {
             foreach (var a in accountList)
             {
-                // TODO: add implementation when Account Class is done.                
+                Console.WriteLine(a);
             }
         }
 
@@ -124,16 +126,20 @@ namespace BankingApp.Users
         /// <param name="accountType">The type of account to open. Valid values are "savings" for a savings account or any other value for a
         /// standard account.</param>
         /// <param name="currency">The currency in which the account will be denominated. For example, "USD" for US dollars or "EUR" for euros.</param>
-        public void OpenAccount(string accountType, string currency)
+        public void OpenAccount(AccountType accountType, string currency)
         {
 
-            if (accountType.ToLower().Equals("savings"))
+            if (accountType == AccountType.Savings)
             {
                 accountList.Add(new SavingsAccount(currency, this));
             }
-            else
+            else if (accountType == AccountType.Normal)
             {
                 accountList.Add(new Account(currency, this));
+            }
+            else
+            {
+                Console.WriteLine("Error: Invalid account type specified.");
             }
         }
     }

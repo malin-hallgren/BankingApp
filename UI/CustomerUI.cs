@@ -48,7 +48,7 @@ namespace BankingApp.UI
                     AccountType accountType = CustomerAccount.ChooseAccountType();
                     string currency = CustomerAccount.ChooseCurrency();
                     user.OpenAccount(accountType, currency);
-                    Console.WriteLine($"Created {accountType} account with {currency} currency.");
+                    Console.WriteLine($"\n{accountType} account created with {currency} currency.");
                     Menu.ReturnToStart();
                     return true;
                 case 4:

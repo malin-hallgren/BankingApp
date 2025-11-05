@@ -21,7 +21,11 @@ namespace BankingApp.Utilities
 
         };
 
-
+        public static Dictionary<string, decimal> GetDictionary()
+        {
+            return new Dictionary<string, decimal> (_exchangeRates);
+        }
+     
         // Convert currency from -> to
         public static decimal Convert(decimal amount, string fromCurrency, string toCurrency)
         {

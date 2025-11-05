@@ -21,6 +21,7 @@ namespace BankingApp.UI
                 "Print Accounts",
                 "Request Loan",
                 "Open Account",
+                "Deposit",
                 "Log out"
             };
 
@@ -52,6 +53,11 @@ namespace BankingApp.UI
                     Menu.ReturnToStart();
                     return true;
                 case 4:
+                    Menu.ReturnToLogin();
+                    return false;
+
+                case 5:
+
                     Menu.ReturnToLogin();
                     return false;
 

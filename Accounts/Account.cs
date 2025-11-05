@@ -12,6 +12,7 @@ namespace BankingApp.Accounts
 {
     internal class Account
     {
+        public string AccountName { get; set; }
         public Guid AccountNumber { get; set; }
         public decimal Balance { get; set; }
         public string Currency { get; set; }
@@ -22,17 +23,19 @@ namespace BankingApp.Accounts
         [JsonInclude]
         private List<Transfer> logList;
 
+       
         public Account()
         {
             logList = new List<Transfer>();
         }
 
-        public Account(string currency, User owner, decimal balance = 0)
+        public Account(string accountName, string currency, User owner, decimal balance = 0)
         {
-            AccountNumber = Guid.NewGuid();
-            Balance = balance;
+            AccountName = accountName;
             Currency = currency;
             Owner = owner;
+            AccountNumber = Guid.NewGuid();
+            Balance = balance;
             logList = new List<Transfer>();
         }
         public List<Transfer> GetLogList()
@@ -105,9 +108,14 @@ namespace BankingApp.Accounts
             Console.WriteLine($"Transfers are sent every {BankApp.Interval} minutes. Your balance will change and the transaction will be displayed in your logs shortly!");
         }
 
+        public void Deposit(decimal amount)
+        {
+            Balance += amount;
+            logList.Add(new Transfer(amount, this, this, "Deposit"));
+        }
         public override string ToString()
         {
-            return $"Account Number: {AccountNumber}\nBalance: {Balance}\nCurrency: {Currency}\nOwner: {Owner.Name}\n";
+            return $"Account name: {accountName}\nBalance: {Balance}\nCurrency: {Currency}\nOwner: {Owner.Name}\nAccount Number: {AccountNumber}";
         }
     }
 }

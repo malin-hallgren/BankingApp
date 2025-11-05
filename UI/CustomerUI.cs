@@ -50,7 +50,7 @@ namespace BankingApp.UI
                     user.OpenAccount(accountType, currency);
                     Console.WriteLine($"\n{accountType} account created with {currency} currency.");
                     Menu.ReturnToStart();
-                    return false;
+                    return true;
                 case 4:
                     Menu.ReturnToLogin();
                     return false;

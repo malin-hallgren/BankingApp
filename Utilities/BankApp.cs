@@ -17,21 +17,13 @@ namespace BankingApp.Utilities
     {
         private static readonly string _filePathUsers = "BasicUserList.json";
         private static List<BasicUser> Users = new List<BasicUser>();
-
-        private static readonly string _filePathAccounts = "Accounts.json";
-        private static List<Account> Accounts = new List<Account>();
-        
+        private static List<Transfer> PendingTransfer = new List<Transfer>();
         public static int Interval { get; private set; } = 1;
         private static System.Timers.Timer _transferTimer = new System.Timers.Timer(Interval * 60000/10);
         private static readonly object _pendingLock = new object();
         private static PasswordHasher<BasicUser> Hasher {  get; set; } = new PasswordHasher<BasicUser>();
-
-        private static List<Transfer> PendingTransfer = new List<Transfer>();
         private static readonly string _filePathTransfers = "Transfers.json";
-        //private static Dictionary<Guid, string> Transfers = new Dictionary<Guid, string>();
-        private static readonly string _filePathConcludedTransfers = "ConcludedTransfers.json";
-        private static List<Transfer> ConcludedTransfers = new List<Transfer>();
-
+        private static Dictionary<Guid, string> Transfers = new Dictionary<Guid, string>();
         private static readonly string _filPathSum = "TransferSum.json";
         private static decimal TransferSum;
         public static bool IsRunning { get; private set; }
@@ -97,63 +89,8 @@ namespace BankingApp.Utilities
         private static void Setup()
         {
             Users = JsonHelpers.LoadList<BasicUser>(_filePathUsers);
-            ConcludedTransfers = JsonHelpers.LoadList<Transfer>(_filePathConcludedTransfers);
-            List<Account> temp = new List<Account>();
-            
-            // Restore Owner to Accounts and Loans via the lists on the User
-            foreach (var user in Users)
-            {
-                if (user.GetType() == typeof(User))
-                {
-                    var customer = (User)user;
-                    foreach (var account in customer.GetAccounts())
-                    {
-                        account.Owner = customer;
-                        temp.Add(account);
-                    }
-                    foreach (var loan in customer.GetLoans())
-                    {
-                        loan.Owner = customer;
-                    }
-                }
-            }
+            Transfers = JsonHelpers.LoadDict<Guid, string>(_filePathTransfers);
 
-            // Restores To and From accounts to the transfers by the ID numbers, throwing an exception if accounts
-            // with the mentioned IDs does not exist
-            foreach(var transfer in ConcludedTransfers)
-            {
-                try
-                {
-                    transfer.To = temp.Find(x => x.AccountNumber == transfer.ToID);
-                    if (transfer.To == null)
-                    {
-                        throw new InvalidOperationException("The To account doesn't exist");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-
-                try
-                {
-                    transfer.From = temp.Find(x => x.AccountNumber == transfer.FromID);
-                    if (transfer.From == null)
-                    {
-                        throw new InvalidOperationException("The From account doesn't exist");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-
-                transfer.To.AddToLogList(transfer);
-                transfer.From.AddToLogList(transfer);
-            }
-            
-
-            // Checks if the file to read a transfer sum exists, creates if not, and reads it if it does
             if (File.Exists(_filPathSum))
             {
                 string json = File.ReadAllText(_filPathSum) ?? new string("0");
@@ -176,6 +113,33 @@ namespace BankingApp.Utilities
                 JsonHelpers.SaveList(Users, _filePathUsers);
 
                 Console.Clear();
+            }
+
+            foreach (var user in Users)
+            {
+                if (user.GetType() == typeof(User))
+                {
+                    var customer = (User)user;
+                    foreach (var account in customer.GetAccounts())
+                    {
+                        account.Owner = customer;
+                        foreach (var log in account.GetLogList())
+                        {
+                            if (log.FromID == account.AccountNumber)
+                            {
+                                log.From = account;
+                            }
+                            else if (log.ToID == account.AccountNumber)
+                            {
+                                log.To = account;
+                            }
+                        }
+                    }
+                    foreach (var loan in customer.GetLoans())
+                    {
+                        loan.Owner = customer;
+                    }
+                }
             }
         }
 
@@ -219,7 +183,7 @@ namespace BankingApp.Utilities
         /// Gets a copy of the Transfer list
         /// </summary>
         /// <returns>a copy of the PendingTransfers list</returns>
-        public static List<Transfer> GetPendingTransferList()
+        public static List<Transfer> GetTransferList()
         {
             lock(_pendingLock)
             {
@@ -227,40 +191,11 @@ namespace BankingApp.Utilities
             }
         }
 
-        /// <summary>
-        /// Adds to the PendingTransfers list
-        /// </summary>
-        /// <param name="transfer">The transfer to add to the list</param>
-        public static void AddToPendingTransferList(Transfer transfer)
-        {
-            lock (_pendingLock)
-            {
-                PendingTransfer.Add(transfer);
-            }
-        }
-
-        /// <summary>
-        /// Adds a transfer to the list of concluded transfers for statistics reasons
-        /// </summary>
-        /// <param name="transfer">the transfer to add</param>
-        public static void AddToConcludedTransfers(Transfer transfer)
-        {
-            ConcludedTransfers.Add(transfer);
-            JsonHelpers.SaveList(ConcludedTransfers, _filePathConcludedTransfers);
-        }
-
-        /// <summary>
-        /// Prints a list of all the transactions carried out in the bank
-        /// </summary>
         public static void PrintStatistics()
         {
-            //This is an escape sequence to force a complete wipe of the logs, since they can get long, and Clear() only clears the visible window
-            Console.Clear();
-            Console.WriteLine("\x1b[3J");
-
-            foreach (var transfer in ConcludedTransfers)
+            foreach(var kvp in Transfers)
             {
-                Console.WriteLine(transfer);
+                Console.WriteLine(kvp.Value);
                 Console.WriteLine(new string('_', Console.BufferWidth));
             }
 
@@ -268,6 +203,17 @@ namespace BankingApp.Utilities
             Console.WriteLine($"Total amount of money transferred in the bank (In SEK): {TransferSum}");
         }
 
+        /// <summary>
+        /// Adds to the PendingTransfers list
+        /// </summary>
+        /// <param name="transfer">The transfer to add to the list</param>
+        public static void AddToTransferList(Transfer transfer)
+        {
+            lock (_pendingLock)
+            {
+                PendingTransfer.Add(transfer);
+            }
+        }
 
         /// <summary>
         /// Uses a hardcoded 15 minute timer to run OnTimedEvent, automatically resets upon completion
@@ -304,9 +250,9 @@ namespace BankingApp.Utilities
                         string json = TransferSum.ToString();
                         json = JsonSerializer.Serialize(TransferSum);
                         File.WriteAllText(_filPathSum, json);
-
-
-                        AddToConcludedTransfers(transfer);
+                        
+                        
+                        Transfers.TryAdd(transfer.TransactionID, transfer.ToString());
 
                         transfer.From.AddToLogList(transfer);
                         transfer.To.AddToLogList(transfer);
@@ -317,8 +263,7 @@ namespace BankingApp.Utilities
                             transfer.SendMail();
                         }
                     }
-                    //JsonHelpers.SaveDict<Guid, string>(_filePathTransfers, Transfers);
-                    JsonHelpers.SaveList(ConcludedTransfers, _filePathConcludedTransfers);
+                    JsonHelpers.SaveDict<Guid, string>(_filePathTransfers, Transfers);
 
                     PendingTransfer.Clear();
                 }

@@ -20,9 +20,10 @@ namespace BankingApp.Accounts
         [JsonIgnore]
         public User Owner { get; set; }
 
+        [JsonInclude]
         private List<Transfer> logList;
 
-        //This is for JSON
+       
         public Account()
         {
             logList = new List<Transfer>();
@@ -47,10 +48,6 @@ namespace BankingApp.Accounts
             logList.Add(toAdd);
         }
 
-        /// <summary>
-        /// Creates a transfer and adds it to the list of pending transfers
-        /// </summary>
-        /// <param name="user">The User creating the transfer</param>
         public static void CreateTransfer(User user)
         {
             Account[] temp = user.GetAccounts().Where(x => x.GetType() != typeof(SavingsAccount)).ToArray();
@@ -75,6 +72,9 @@ namespace BankingApp.Accounts
 
             selected = Menu.Run(allUserAccounts, "To which account do you wish to transfer money?");
             Account to = allAccounts[selected];
+
+
+            
 
             Console.Clear();
             

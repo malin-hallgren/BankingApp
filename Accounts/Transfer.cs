@@ -30,7 +30,7 @@ namespace BankingApp.Accounts
         
         public Guid ToID { get; set; }
 
-        //This is for JSON
+
         public Transfer()
         {
             TransactionID = Guid.NewGuid();
@@ -45,7 +45,7 @@ namespace BankingApp.Accounts
             To = to;
             ToID = To.AccountNumber;
             TransactionID = Guid.NewGuid();
-            BankApp.AddToPendingTransferList(this);
+            BankApp.AddToTransferList(this);
         }
 
 

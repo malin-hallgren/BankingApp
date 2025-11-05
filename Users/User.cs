@@ -4,14 +4,19 @@ using BankingApp.Utilities.Enums;
 using Org.BouncyCastle.Bcpg;
 using System.Net.Mail;
 using System.Xml.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace BankingApp.Users
 {
     internal class User : BasicUser
     {
+        [JsonInclude]
         private List<Account> accountList;
+        [JsonInclude]
         private List<Loan>? loanList;
         public bool IsBlocked { get; set; }
+        [JsonInclude]
         private decimal Sum;
         public uint CreditScore { get; set; }
 

@@ -17,13 +17,23 @@ namespace BankingApp.Utilities
             for (int i = 0; i < options.Length; i++)
             {
                 string currentOption = options[i];
+                bool isAlarm = AlarmOption(currentOption);
 
-                if (i == selected)
+                if (i == selected && !isAlarm)
                 {
                     Console.ForegroundColor = ConsoleColor.Black;
                     Console.BackgroundColor = ConsoleColor.White;
                 }
-
+                else if (i == selected && isAlarm)
+                {
+                    Console.BackgroundColor = ConsoleColor.White;
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                }
+                else if (i != selected && isAlarm)
+                {
+                    Console.BackgroundColor = ConsoleColor.Black;
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                }
                 else
                 {
                     Console.ForegroundColor = ConsoleColor.White;
@@ -97,29 +107,30 @@ namespace BankingApp.Utilities
             Console.Write(new string(' ', Console.BufferWidth));
         }
 
+        private static bool AlarmOption(string option)
+        {
+            if (option == "Quit" || option == "Log out")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
-        public static void ReturnToStart(BasicUser user)
+
+        public static void ReturnToStart()
         {
             Console.CursorVisible = false;
             Console.WriteLine("\nPress ENTER to return to menu...");
-            if (user.GetType() == typeof(User))
-            {
-                Console.ReadLine();
-                User Customer = (User)user;
-                CustomerUI.Start(Customer);
-            }
-
-            else
-            {
-                Console.ReadLine();
-                Admin admin = (Admin)user;
-                AdminUI.Start(admin);
-            }
+            Console.ReadLine();
         }
 
         public static void ReturnToLogin()
         {
             Console.WriteLine("Logged out successfully. Please log in again if you wish to continue.\n\nPress ENTER to continue...");
+            Console.ReadLine();
         }
     }
 }

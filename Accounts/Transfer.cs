@@ -14,8 +14,8 @@ namespace BankingApp.Accounts
 {
     internal class Transfer
     {
-        public Guid TransactionID {get; set;}
-        public string TransactionMessage {get; set;}
+        public Guid TransactionID { get; set; }
+        public string TransactionMessage { get; set; }
         public decimal Amount { get; set; }
         public DateTime Date { get; set; }
         public Account From { get; set; }
@@ -59,7 +59,7 @@ namespace BankingApp.Accounts
             message.Subject = $"{To.Owner.Name} please check your account";
             message.Body = new TextPart("plain")
             {
-               Text = "Lol hej"
+                Text = "Lol hej"
             };
 
             using (var client = new SmtpClient())
@@ -85,7 +85,6 @@ namespace BankingApp.Accounts
                     }
                 }
             }
-            ;
         }
 
         /// <summary>
@@ -96,12 +95,15 @@ namespace BankingApp.Accounts
             To.Balance += Amount;
             From.Balance -= Amount;
         }
-         
+
         public override string ToString()
         {
+            if (From == To)
+            {
+                return $"Deposit amount: {Amount}";
+            }
+
             return $"Amount: {Amount} | Message: {TransactionMessage} | Date {Date} | From {From} | To {To}";
         }
-
-
     }
 }

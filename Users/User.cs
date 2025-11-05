@@ -35,7 +35,7 @@ namespace BankingApp.Users
         {
             foreach (var a in accountList)
             {
-                Console.WriteLine($"Action log for account {a.AccountNumber}:");
+                Console.WriteLine($"Action log for account {a.AccountName}:");
                 foreach (var log in a.GetLogList())
                 {
                     Console.WriteLine(log);
@@ -135,16 +135,16 @@ namespace BankingApp.Users
         /// <param name="accountType">The type of account to open. Valid values are "savings" for a savings account or any other value for a
         /// standard account.</param>
         /// <param name="currency">The currency in which the account will be denominated. For example, "USD" for US dollars or "EUR" for euros.</param>
-        public void OpenAccount(AccountType accountType, string currency)
+        public void OpenAccount(string name,AccountType accountType, string currency)
         {
 
             if (accountType == AccountType.Savings)
             {
-                accountList.Add(new SavingsAccount(currency, this));
+                accountList.Add(new SavingsAccount(name,currency, this));
             }
             else if (accountType == AccountType.Normal)
             {
-                accountList.Add(new Account(currency, this));
+                accountList.Add(new Account(name,currency, this));
             }
             else
             {

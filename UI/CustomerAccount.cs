@@ -28,8 +28,7 @@ namespace BankingApp.UI
                 return AccountType.Normal;
             }
             else if (selectedIndex == 1)
-            {
-                
+            {                
                 Console.WriteLine("Creating savings account");
                 return AccountType.Savings;
             }

@@ -18,7 +18,6 @@ namespace BankingApp.Users
         public bool IsBlocked { get; set; }
         [JsonInclude]
         private decimal Sum;
-        public uint CreditScore { get; set; }
 
         public User()
         {
@@ -30,7 +29,6 @@ namespace BankingApp.Users
             accountList = new List<Account>();
             loanList = new List<Loan>();
             IsBlocked = isBlocked;
-            CreditScore = creditScore;
         }
 
         /// <summary>

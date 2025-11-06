@@ -3,9 +3,10 @@ using BankingApp.Utilities;
 using BankingApp.Utilities.Enums;
 using Org.BouncyCastle.Bcpg;
 using System.Net.Mail;
-using System.Xml.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Xml.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BankingApp.Users
 {
@@ -41,10 +42,11 @@ namespace BankingApp.Users
 
             foreach (var a in accountList)
             {
-                Console.WriteLine($"Action log for account {a.AccountName}:");
+                OutputHelpers.Highlight($"Action log for account {a.AccountName}:\n\n", ConsoleColor.DarkYellow);
                 foreach (var log in a.GetLogList())
                 {
-                    Console.WriteLine(log);
+                    log.PrintContextual(log, a.Owner);
+                    Console.WriteLine(new string('_', Console.BufferWidth) + "\n");
                 }
 
                 Console.WriteLine(new string('_', Console.BufferWidth)+ "\n");
@@ -61,7 +63,8 @@ namespace BankingApp.Users
 
             foreach (var a in accountList)
             {
-                Console.WriteLine(a);
+                Console.WriteLine($"{a}\n");
+                Console.WriteLine(new string('_', Console.BufferWidth) + "\n");
             }
         }
 

@@ -83,7 +83,21 @@ namespace BankingApp.Utilities
 
                 if (keyPressed.Key == ConsoleKey.Enter)
                 {
-                    break;
+                    if (String.IsNullOrWhiteSpace(input))
+                    {
+                        Console.Write("You have not entered a password, alternatively entered only whitespace. Press ENTER to try again...");
+
+                        Console.CursorVisible = false;
+                        Console.ReadLine();
+
+                        Console.SetCursorPosition(0, 1);
+                        Console.Write(new string(' ', Console.BufferWidth));
+
+                        Console.SetCursorPosition(0, 1);
+                        Console.CursorVisible = true;
+                        continue;
+                    }
+                    return input.ToLower();
                 }
                 else if (keyPressed.Key == ConsoleKey.Backspace)
                 {
@@ -107,16 +121,16 @@ namespace BankingApp.Utilities
                 {
                     chars.Add(keyPressed.KeyChar);
                 }
-            }
 
+                input = new string(chars.ToArray());
 
-            input = new string(chars.ToArray());
-
-            if (String.IsNullOrWhiteSpace(input))
-            {
-                Console.Write("You have not entered a password, alternatively entered only whitespace. Press ENTER to try again...");
-                Console.ReadLine();
-                Console.Clear();
+                if (String.IsNullOrWhiteSpace(input))
+                {
+                    Console.Write("You have not entered a password, alternatively entered only whitespace. Press ENTER to try again...");
+                    Console.ReadLine();
+                    Console.Clear();
+                    break;
+                }
             }
             return input.ToLower();
         }

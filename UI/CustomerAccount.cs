@@ -38,8 +38,6 @@ namespace BankingApp.UI
                 Console.WriteLine("Something has gone very wrong...");
                 return AccountType.Error;
             }
-
-
         }
 
         public static string ChooseCurrency()

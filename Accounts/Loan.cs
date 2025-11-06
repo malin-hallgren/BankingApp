@@ -14,7 +14,7 @@ namespace BankingApp.Accounts
     internal class Loan
     {
         public decimal Size { get; set; }
-        private  decimal LoanInterest { get; set; }
+        private static decimal LoanInterest { get; set; }
 
         [JsonIgnore]
         public User Owner { get; set; }
@@ -33,38 +33,38 @@ namespace BankingApp.Accounts
             if (size > owner.GetSum() * 5)
             {
                 string message = String.Empty;
-                
+
                 if (size > owner.GetSum() * 5)
                 {
                     message += $"Loan cannot be larger than five times the total sum of your money in the bank.";
                 }
 
-                if(String.IsNullOrWhiteSpace(message))
+                if (String.IsNullOrWhiteSpace(message))
                 {
                     message += "Invalid loan";
                 }
 
                 throw new InvalidOperationException(message);
-            }            
+            }
 
             Size = size;
             Owner = owner;
-            CalculateInterest(size);
-            owner.AddLoan(this);           
+            LoanInterest = CalculateInterest(size);
+            owner.AddLoan(this);
         }
-       
+
         public void AdminUpdateInterest(decimal interest)
         {
             LoanInterest = interest;
         }
-        
+
         //Just a quick draft of calculate interest. We should improve it by adding more factors for the calculation, like income size, repaymeny period etc.
 
         /// <summary>
         /// Decides interest depending on the size of the Loan
         /// </summary>
         /// <param name="loan"> Size of loan</param>
-        private decimal CalculateInterest(decimal loan)
+        private static decimal CalculateInterest(decimal loan)
         {
             // Maybe implement an Enum for different loan sizes instead of using hardcoded values
             // Show different interest rates depending on the size of the loan to the user before accepting the loan
@@ -78,13 +78,18 @@ namespace BankingApp.Accounts
             }
             else if (loan > 3000000 && loan < 5000000)
             {
-                return LoanInterest = 0.032m;
+                return 0.032m;
             }
-
             else
             {
-                return LoanInterest = 0.025m;
+                return 0.025m;
             }
+        }
+
+        public static decimal SimulateInterest(decimal size)
+        {
+            decimal simulatedInterest = CalculateInterest(size);
+            return simulatedInterest * 100;
         }
 
         /// <summary>
@@ -93,7 +98,7 @@ namespace BankingApp.Accounts
         /// <returns>A string containing the size of the loan, the interest rate, and the owner's name.</returns>
         public override string ToString()
         {
-            return $"Size of loan: {Size} | Interest: {LoanInterest} | Owner: {Owner} ";
+            return $"Loan size: {Size} \nInterest: {LoanInterest * 100}\nBorrower: \n{Owner} ";
         }
     }
 

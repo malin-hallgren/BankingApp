@@ -23,17 +23,12 @@ namespace BankingApp.Accounts
         public DateTime Date { get; set; }
         [JsonIgnore]
         public Account From { get; set; }
-
-        public decimal FromAccBalance { get; set; }
-        
+        public decimal FromAccBalance { get; set; }        
         public Guid FromID {  get; set; }
         [JsonIgnore]
         public Account To { get; set; }
-
         public decimal ToAccBalance { get; set; }
-
         public Guid ToID { get; set; }
-
 
         public Transfer()
         {
@@ -51,7 +46,6 @@ namespace BankingApp.Accounts
             TransactionID = Guid.NewGuid();
             BankApp.AddToTransferList(this);
         }
-
 
         /// <summary>
         /// Sends an email to the owner of the account which the transfer is made from
@@ -75,8 +69,6 @@ namespace BankingApp.Accounts
             {
                 Console.WriteLine($"Something went wrong with the email addresses: {ex.Message}");
             }
-
-
             message.Subject = $"{From.Owner.Name} please check your account";
             message.Body = new TextPart("plain")
             {

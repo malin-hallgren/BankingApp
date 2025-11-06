@@ -151,7 +151,7 @@ namespace BankingApp.Accounts
                 Console.WriteLine($"Account name: {transfer.From.AccountName}\nBalance: {transfer.FromAccBalance} {transfer.From.Currency}\nOwner: {transfer.From.Owner.Name}\nAccount Number: {transfer.From.AccountNumber}\n");
 
                 OutputHelpers.Highlight("\nTo:\n", ConsoleColor.Yellow);
-                Console.WriteLine($"Account Name: {transfer.To.AccountName}\nOwner: {transfer.To.Owner.Name}\nBalance: {transfer.ToAccBalance}\nAccount Number: {transfer.To.AccountNumber}");
+                Console.WriteLine($"Account Name: {transfer.To.AccountName}\nBalance: {transfer.ToAccBalance}\nOwner: {transfer.To.Owner.Name}\nAccount Number: {transfer.To.AccountNumber}");
             }
             else if (user == transfer.From.Owner)
             {
@@ -172,7 +172,7 @@ namespace BankingApp.Accounts
                 Console.WriteLine($"Account name: {transfer.From.AccountName}\nOwner: {transfer.From.Owner.Name}\nAccount Number: {transfer.From.AccountNumber}\n");
 
                 OutputHelpers.Highlight("\nTo:\n", ConsoleColor.Yellow);
-                Console.WriteLine($"Account Name: {transfer.To.AccountName}\nOwner: {transfer.To.Owner.Name}\nBalance: {transfer.ToAccBalance}\nAccount Number: {transfer.To.AccountNumber}");
+                Console.WriteLine($"Account Name: {transfer.To.AccountName}\nBalance: {transfer.ToAccBalance}\nOwner: {transfer.To.Owner.Name}\nAccount Number: {transfer.To.AccountNumber}");
             }
         }
     }

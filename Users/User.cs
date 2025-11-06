@@ -36,6 +36,9 @@ namespace BankingApp.Users
         /// </summary>
         public void PrintActionLog()
         {
+            Console.Clear();
+            Console.WriteLine("\x1b[3J");
+
             foreach (var a in accountList)
             {
                 Console.WriteLine($"Action log for account {a.AccountName}:");
@@ -53,6 +56,9 @@ namespace BankingApp.Users
         /// </summary>
         public void PrintAccounts()
         {
+            Console.Clear();
+            Console.WriteLine("\x1b[3J");
+
             foreach (var a in accountList)
             {
                 Console.WriteLine(a);

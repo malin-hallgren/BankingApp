@@ -136,6 +136,10 @@ namespace BankingApp.Users
                     {
                         Console.WriteLine("Input your password");
                         string input = InputHelpers.InputPassword();
+                        if (input == null)
+                        {
+                            continue;
+                        }
 
                         attempts++;
 
@@ -166,7 +170,7 @@ namespace BankingApp.Users
                             break;
                         }
                     }
-                    if (attempts >= 3 && loginUser is User)
+                    if (attempts >= 3 && loginStatus == PasswordVerificationResult.Failed && loginUser is User)
                     {
                         Console.Clear();
 
@@ -181,7 +185,7 @@ namespace BankingApp.Users
                         Console.ReadLine();
                     }
 
-                    else if (attempts >= 3 && loginUser is Admin)
+                    else if (attempts >= 3 && loginStatus == PasswordVerificationResult.Failed && loginUser is Admin)
                     {
                         Console.Clear();
 

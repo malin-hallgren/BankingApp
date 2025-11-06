@@ -155,7 +155,7 @@ namespace BankingApp.Accounts
             }
             else if (user == transfer.To.Owner)
             {
-                OutputHelpers.HighlightFragment($"Date {transfer.Date}\nAmount: ", $"- {transfer.Amount} {transfer.From.Currency}", $"\nMessage: {transfer.TransactionMessage}\n", ConsoleColor.DarkGreen);
+                OutputHelpers.HighlightFragment($"Date {transfer.Date}\nAmount: ", $"+ {transfer.Amount} {transfer.From.Currency}", $"\nMessage: {transfer.TransactionMessage}\n", ConsoleColor.DarkGreen);
 
                 OutputHelpers.Highlight("\nFrom:\n", ConsoleColor.Yellow);
                 Console.WriteLine($"Account name: {transfer.From.AccountName}\nOwner: {transfer.From.Owner.Name}\nAccount Number: {transfer.From.AccountNumber}\n");

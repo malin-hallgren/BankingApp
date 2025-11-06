@@ -81,6 +81,13 @@ namespace BankingApp.UI
             }
         }
 
+        /// <summary>
+        /// Prompts the user to select an account and deposit a specified amount into it.
+        /// </summary>
+        /// <remarks>This method displays a menu for the user to select an account, prompts for a deposit
+        /// amount,  and updates the selected account's balance. The deposit amount must be a valid decimal
+        /// value.</remarks>
+        /// <param name="user">The user whose accounts are available for deposit. Cannot be null.</param>
         private static void DepositAmount(User user)
         {
             Console.Clear();

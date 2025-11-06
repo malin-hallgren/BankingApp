@@ -142,6 +142,17 @@ namespace BankingApp.Accounts
                 OutputHelpers.Highlight("\nTo:\n", ConsoleColor.Yellow);
                 Console.WriteLine($"Account: {transfer.To.AccountName} - {transfer.To.AccountNumber}\nCurrent Balance: {transfer.ToAccBalance} {transfer.To.Currency}\nOwned by {transfer.To.Owner.Name}\n");
             }
+            else if (transfer.From.Owner == transfer.To.Owner)
+            {
+                Console.Write("Internal Transfer:\nAmount: ");
+                OutputHelpers.Highlight($"{transfer.Amount} {transfer.From.Currency}\n", ConsoleColor.DarkYellow);
+
+                OutputHelpers.Highlight("\nFrom:\n", ConsoleColor.Yellow);
+                Console.WriteLine($"Account name: {transfer.From.AccountName}\nBalance: {transfer.FromAccBalance} {transfer.From.Currency}\nOwner: {transfer.From.Owner.Name}\nAccount Number: {transfer.From.AccountNumber}\n");
+
+                OutputHelpers.Highlight("\nTo:\n", ConsoleColor.Yellow);
+                Console.WriteLine($"Account Name: {transfer.To.AccountName}\nOwner: {transfer.To.Owner.Name}\nBalance: {transfer.ToAccBalance}\nAccount Number: {transfer.To.AccountNumber}");
+            }
             else if (user == transfer.From.Owner)
             {
                 OutputHelpers.HighlightFragment($"Date {transfer.Date}\nAmount: ", $"- {transfer.Amount} {transfer.From.Currency}", $"\nMessage: {transfer.TransactionMessage}\n",ConsoleColor.DarkRed); 

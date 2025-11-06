@@ -15,9 +15,10 @@ namespace BankingApp.Accounts
     {
         public decimal Size { get; set; }
         private static decimal LoanInterest { get; set; }
-
+        private decimal LoanInclInterest { get; set; }
         [JsonIgnore]
         public User Owner { get; set; }
+        //needed?
         public double MortagePercent { get; set; }
 
         /// <summary>
@@ -53,7 +54,7 @@ namespace BankingApp.Accounts
             owner.AddLoan(this);
         }
 
-        public void AdminUpdateInterest(decimal interest)
+        public static void AdminUpdateInterest(decimal interest)
         {
             LoanInterest = interest;
         }
@@ -98,7 +99,7 @@ namespace BankingApp.Accounts
         /// <returns>A string containing the size of the loan, the interest rate, and the owner's name.</returns>
         public override string ToString()
         {
-            return $"Loan size: {Size} \nInterest: {LoanInterest * 100}\nBorrower: \n{Owner} ";
+            return $"Loan size: {Size} \nInterest rate: {(LoanInterest * 100).ToString("F2")}\nLoan incl. interest rate: {((LoanInterest + 1) * Size).ToString("F")}\nBorrower: \n{Owner}";
         }
     }
 

@@ -55,7 +55,6 @@ namespace BankingApp.Utilities
             Options = new JsonSerializerOptions
             {
                 WriteIndented = true,
-                ReferenceHandler = ReferenceHandler.Preserve,
                 TypeInfoResolver = resolver
             };
         }

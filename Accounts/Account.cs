@@ -20,7 +20,6 @@ namespace BankingApp.Accounts
         [JsonIgnore]
         public User Owner { get; set; }
 
-        [JsonInclude]
         private List<Transfer> logList;
 
        
@@ -45,7 +44,10 @@ namespace BankingApp.Accounts
 
         public void AddToLogList(Transfer toAdd)
         {
-            logList.Add(toAdd);
+            if(!logList.Exists(x => x.TransactionID == toAdd.TransactionID))
+            {
+                logList.Add(toAdd);
+            }
         }
 
         /// <summary>

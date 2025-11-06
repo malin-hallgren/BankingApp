@@ -120,11 +120,7 @@ namespace BankingApp.Utilities
                     if (transfer.To == null)
                     {
                         throw new InvalidOperationException("To account doesn't exist");
-                    }
-                    else
-                    {
-                        transfer.To.AddToLogList(transfer);
-                    }     
+                    }  
                 }
                 catch (Exception ex)
                 {
@@ -133,22 +129,22 @@ namespace BankingApp.Utilities
 
                 try
                 {
-                    transfer.From = allAccounts.Find(x => x.AccountNumber == transfer.ToID);
-                    if(transfer.From == null)
+                    transfer.From = allAccounts.Find(x => x.AccountNumber == transfer.FromID);
+                    if (transfer.From == null)
                     {
                         throw new InvalidOperationException("From account doesn't exist");
-                    }
-                    else
-                    {
-                        transfer.From.AddToLogList(transfer);
-                    }     
+                    }    
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
                 }
                 
-                
+                if (transfer.To != null && transfer.From != null)
+                {
+                    transfer.To.AddToLogList(transfer);
+                    transfer.From.AddToLogList(transfer);
+                }
             }
 
             if (File.Exists(_filPathSum))

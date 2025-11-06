@@ -71,20 +71,20 @@ namespace BankingApp.Users
             Console.WriteLine($"Contact info for {Name}:\nEmail: {EmailAddress}\nPhone Number: {PhoneNumber}");
         }
 
-        public void UpdateInterestForAllLoans(List<BasicUser> owners, decimal newInterest)
-        {
+        //public void UpdateInterestForAllLoans(List<BasicUser> owners, decimal newInterest)
+        //{
 
-            foreach (var bu in owners)
-            {
-                if (bu.GetType() == typeof(User))
-                {
-                    var user = (User)bu;
-                    foreach (var l in user.GetLoans())
-                    {
-                        l.AdminUpdateInterest(newInterest);
-                    }
-                }
-            }
-        }
+        //    foreach (var bu in owners)
+        //    {
+        //        if (bu.GetType() == typeof(User))
+        //        {
+        //            var user = (User)bu;
+        //            foreach (var l in user.GetLoans())
+        //            {
+        //                .AdminUpdateInterest(newInterest);
+        //            }
+        //        }
+        //    }
+        //}
     }
 }

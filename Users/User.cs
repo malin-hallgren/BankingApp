@@ -19,8 +19,6 @@ namespace BankingApp.Users
         public bool IsBlocked { get; set; }
         [JsonInclude]
         private decimal Sum;
-        public uint CreditScore { get; set; }
-
 
         public User()
         {
@@ -32,7 +30,6 @@ namespace BankingApp.Users
             accountList = new List<Account>();
             loanList = new List<Loan>();
             IsBlocked = isBlocked;
-            CreditScore = creditScore;
         }
 
         /// <summary>
@@ -71,6 +68,24 @@ namespace BankingApp.Users
             }
         }
 
+        public void PrintLoans()
+        {
+            if(loanList.Count != 0) 
+            { 
+            Console.Clear();
+            Console.WriteLine("\x1b[3J");
+
+            foreach(var l in loanList)
+            {
+                Console.WriteLine($"{l}\n");
+                Console.WriteLine(new string('*', Console.BufferWidth) + "\n");
+            }
+            }
+            else
+            {
+                Console.WriteLine("Congratz! You have no loans yet");
+            }
+        }
         /// <summary>
         /// Requests a loan of the specified size for the current user.
         /// </summary>
@@ -83,15 +98,13 @@ namespace BankingApp.Users
             try
             {
                 Loan l = new Loan(this, loansize);
-                Console.WriteLine("Loan was successfully approved and added to your list of loans!:" + l);
+                Console.WriteLine("Loan was successfully approved and added to your list of loans!\n" + l);
                 loanList.Add(l);
-
             }
             catch (InvalidOperationException ex)
             {
                 Console.WriteLine($"Loan denied: {ex.Message}");
-            }
-            
+            }            
         }
 
         /// <summary>
@@ -124,11 +137,7 @@ namespace BankingApp.Users
         {
             return new List<Loan>(loanList);
         }
-        //public IEnumerable<Loan> GetLoans()
-        //{
-        //    return loanList.ToList();
-        //}
-
+      
         public List<Account> GetAccounts()
         {
             return new List<Account>(accountList);

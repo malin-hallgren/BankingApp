@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Security.Cryptography.X509Certificates;
 using System.Runtime.CompilerServices;
+using BankingApp.Accounts;
 
 namespace BankingApp.UI
 {
@@ -47,8 +48,10 @@ namespace BankingApp.UI
                     return true;
                 case 3:
                     Console.WriteLine("Input new interest");
-                    var input = InputHelpers.ValidDecimal();
-                    admin.UpdateInterestForAllLoans(BankApp.GetUserList(), input);
+                    var input = InputHelpers.ValidDecimal()/100;
+                    //admin.UpdateInterestForAllLoans(BankApp.GetUserList(), input);
+                    Loan.AdminUpdateInterest(input);
+                   
                     Menu.ReturnToStart();
                     return true;
                 case 4:

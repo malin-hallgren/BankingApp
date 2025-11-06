@@ -55,7 +55,7 @@ namespace BankingApp.UI
                     Menu.ReturnToStart();
                     return true;
 
-                case 3:
+                case 4:
                     AccountType accountType = CustomerAccount.ChooseAccountType();
                     string currency = CustomerAccount.ChooseCurrency();
                     Console.WriteLine("Enter account name:");
@@ -64,21 +64,21 @@ namespace BankingApp.UI
                     Console.WriteLine($"Created {accountType} account with {currency} currency.");
                     Menu.ReturnToStart();
                     return true;                    
-              case 4:
-                    AccountType accountType = CustomerAccount.ChooseAccountType();
-                    string currency = CustomerAccount.ChooseCurrency();
-                    user.OpenAccount(accountType, currency);
-                    Console.WriteLine($"\n{accountType} account created with {currency} currency.");
-                    Menu.ReturnToStart();
-                    return true;
-              case 5:
-                    DepositAmount(user);
-                    Menu.ReturnToStart();
-                    return true;
-                    
-              case 6:
-                    Menu.ReturnToLogin();
-                    return false;
+                //case 4:
+                //      AccountType accountType = CustomerAccount.ChooseAccountType();
+                //      string currency = CustomerAccount.ChooseCurrency();
+                //      user.OpenAccount(accountType, currency);
+                //      Console.WriteLine($"\n{accountType} account created with {currency} currency.");
+                //      Menu.ReturnToStart();
+                //      return true;
+                case 5:
+                      DepositAmount(user);
+                      Menu.ReturnToStart();
+                      return true;
+                      
+                case 6:
+                      Menu.ReturnToLogin();
+                      return false;
 
                 default:
                     // If error somehow

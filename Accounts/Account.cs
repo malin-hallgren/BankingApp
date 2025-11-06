@@ -48,6 +48,10 @@ namespace BankingApp.Accounts
             logList.Add(toAdd);
         }
 
+        /// <summary>
+        /// Creates a transfer and sends it to the Pending Transfer list
+        /// </summary>
+        /// <param name="user">the user making the transfer</param>
         public static void CreateTransfer(User user)
         {
             Account[] temp = user.GetAccounts().Where(x => x.GetType() != typeof(SavingsAccount)).ToArray();
@@ -72,9 +76,6 @@ namespace BankingApp.Accounts
 
             selected = Menu.Run(allUserAccounts, "To which account do you wish to transfer money?");
             Account to = allAccounts[selected];
-
-
-            
 
             Console.Clear();
             
@@ -115,7 +116,7 @@ namespace BankingApp.Accounts
         }
         public override string ToString()
         {
-            return $"Account name: {accountName}\nBalance: {Balance}\nCurrency: {Currency}\nOwner: {Owner.Name}\nAccount Number: {AccountNumber}";
+            return $"Account name: {AccountName}\nBalance: {Balance}\nCurrency: {Currency}\nOwner: {Owner.Name}\nAccount Number: {AccountNumber}";
         }
     }
 }

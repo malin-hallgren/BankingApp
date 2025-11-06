@@ -119,9 +119,9 @@ namespace BankingApp.Accounts
 
         public override string ToString()
         {
-            if (From == To)
+            if (FromID == ToID)
             {
-                return $"Deposit amount: {Amount}";
+                return $"Deposit\nAmount: {Amount}\nTo: {To.AccountName} - {To.AccountNumber}\nOwned by {To.Owner.Name}";
             }
             return $"Date {Date}\nAmount: {Amount}\nMessage: {TransactionMessage}\nFrom: {From}\nTo: {To}";
         }

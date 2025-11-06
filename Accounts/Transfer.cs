@@ -23,11 +23,15 @@ namespace BankingApp.Accounts
         public DateTime Date { get; set; }
         [JsonIgnore]
         public Account From { get; set; }
+
+        public decimal FromAccBalance { get; set; }
         
         public Guid FromID {  get; set; }
         [JsonIgnore]
         public Account To { get; set; }
-        
+
+        public decimal ToAccBalance { get; set; }
+
         public Guid ToID { get; set; }
 
 
@@ -111,19 +115,65 @@ namespace BankingApp.Accounts
         public decimal ExecuteTransfer(Transfer transfer)
         {
             From.Balance -= Amount;
+            FromAccBalance = From.Balance;
+            
             (decimal, decimal) converted = ConvertCurrencies.Convert(transfer.Amount, transfer.From.Currency, transfer.To.Currency);
             To.Balance += converted.Item1;
+            ToAccBalance = To.Balance;
 
             return converted.Item2;
         }
 
         public override string ToString()
         {
-            if (FromID == ToID)
+            if (From == To)
             {
-                return $"Deposit\nAmount: {Amount}\nTo: {To.AccountName} - {To.AccountNumber}\nOwned by {To.Owner.Name}";
+                return $"Deposit\nAmount: {Amount}\n\nTo: {To.AccountName} - {To.AccountNumber}\nOwned by {To.Owner.Name}";
             }
-            return $"Date {Date}\nAmount: {Amount}\nMessage: {TransactionMessage}\nFrom: {From}\nTo: {To}";
+            return $"Date {Date}\nAmount: {Amount} {From.Currency}\nMessage: {TransactionMessage}\n\nFrom: {From}\n\nTo: {To}";
+        }
+
+        public  void PrintContextual(Transfer transfer, User user)
+        {
+            if (transfer.From == transfer.To)
+            {
+                Console.Write("Deposit:\nAmount: ");
+                OutputHelpers.Highlight($"+ {transfer.Amount} {transfer.To.Currency}\n", ConsoleColor.DarkGreen);
+                OutputHelpers.Highlight("\nTo:\n", ConsoleColor.Yellow);
+                Console.WriteLine($"Account: {transfer.To.AccountName} - {transfer.To.AccountNumber}\nCurrent Balance: {transfer.ToAccBalance} {transfer.To.Currency}\nOwned by {transfer.To.Owner.Name}\n");
+            }
+            else if (transfer.From.Owner == transfer.To.Owner)
+            {
+                Console.Write("Internal Transfer:\nAmount: ");
+                OutputHelpers.Highlight($"{transfer.Amount} {transfer.From.Currency}\n", ConsoleColor.DarkYellow);
+
+                OutputHelpers.Highlight("\nFrom:\n", ConsoleColor.Yellow);
+                Console.WriteLine($"Account name: {transfer.From.AccountName}\nBalance: {transfer.FromAccBalance} {transfer.From.Currency}\nOwner: {transfer.From.Owner.Name}\nAccount Number: {transfer.From.AccountNumber}\n");
+
+                OutputHelpers.Highlight("\nTo:\n", ConsoleColor.Yellow);
+                Console.WriteLine($"Account Name: {transfer.To.AccountName}\nBalance: {transfer.ToAccBalance}\nOwner: {transfer.To.Owner.Name}\nAccount Number: {transfer.To.AccountNumber}");
+            }
+            else if (user == transfer.From.Owner)
+            {
+                OutputHelpers.HighlightFragment($"Date {transfer.Date}\nAmount: ", $"- {transfer.Amount} {transfer.From.Currency}", $"\nMessage: {transfer.TransactionMessage}\n",ConsoleColor.DarkRed); 
+
+                OutputHelpers.Highlight("\nFrom:\n", ConsoleColor.Yellow);
+                Console.WriteLine($"Account name: {transfer.From.AccountName}\nBalance: {transfer.FromAccBalance} {transfer.From.Currency}\nOwner: {transfer.From.Owner.Name}\nAccount Number: {transfer.From.AccountNumber}\n");
+
+                OutputHelpers.Highlight("\nTo:\n", ConsoleColor.Yellow);
+                Console.WriteLine($"Account Name: {transfer.To.AccountName}\nOwner: {transfer.To.Owner.Name}\nAccount Number: {transfer.To.AccountNumber}\n");
+                    
+            }
+            else if (user == transfer.To.Owner)
+            {
+                OutputHelpers.HighlightFragment($"Date {transfer.Date}\nAmount: ", $"+ {transfer.Amount} {transfer.From.Currency}", $"\nMessage: {transfer.TransactionMessage}\n", ConsoleColor.DarkGreen);
+
+                OutputHelpers.Highlight("\nFrom:\n", ConsoleColor.Yellow);
+                Console.WriteLine($"Account name: {transfer.From.AccountName}\nOwner: {transfer.From.Owner.Name}\nAccount Number: {transfer.From.AccountNumber}\n");
+
+                OutputHelpers.Highlight("\nTo:\n", ConsoleColor.Yellow);
+                Console.WriteLine($"Account Name: {transfer.To.AccountName}\nBalance: {transfer.ToAccBalance}\nOwner: {transfer.To.Owner.Name}\nAccount Number: {transfer.To.AccountNumber}");
+            }
         }
     }
 }

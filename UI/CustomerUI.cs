@@ -122,7 +122,7 @@ namespace BankingApp.UI
             }
             else
             {
-                Console.WriteLine("Loan request cancelled.");
+                OutputHelpers.Highlight("Loan request cancelled.", ConsoleColor.DarkRed);
             }
         }
     }

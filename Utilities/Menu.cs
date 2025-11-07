@@ -108,7 +108,7 @@ namespace BankingApp.Utilities
 
         private static bool AlarmOption(string option)
         {
-            if (option == "Quit" || option == "Log out")
+            if (option == "Quit" || option == "Log out" || option == "No")
             {
                 return true;
             }

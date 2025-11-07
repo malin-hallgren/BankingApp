@@ -11,6 +11,12 @@ namespace BankingApp.Accounts
     {
         public decimal Interest { get; set; }
 
+        //Constructor with no params needed for Json Deserialization
+        public SavingsAccount()
+        {
+
+        }
+
         public SavingsAccount(string accountName, string currency, User owner, decimal interest = 3, decimal balance = 0)
             : base(accountName, currency, owner, balance)
         {

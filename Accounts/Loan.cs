@@ -8,18 +8,25 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using BankingApp.Utilities;
 
 namespace BankingApp.Accounts
 {
     internal class Loan
     {
         public decimal Size { get; set; }
-        private static decimal LoanInterest { get; set; }
+        private static decimal LoanInterest { get; set; } //This is global for ALL loans
+        [JsonInclude]
         private decimal LoanInclInterest { get; set; }
         [JsonIgnore]
         public User Owner { get; set; }
-        //needed?
-        public double MortagePercent { get; set; }
+        public decimal MortagePercent { get; set; } //this is local for an individual loan
+
+        //Constructor with no params needed for Json Deserialization
+        public Loan()
+        {
+            
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Loan"/> class with the specified owner and loan size.
@@ -51,12 +58,26 @@ namespace BankingApp.Accounts
             Size = size;
             Owner = owner;
             LoanInterest = CalculateInterest(size);
-            owner.AddLoan(this);
+            MortagePercent = LoanInterest;
+            LoanInclInterest = Size + Size * LoanInterest;
         }
 
         public static void AdminUpdateInterest(decimal interest)
         {
             LoanInterest = interest;
+
+            foreach (var bu in BankApp.GetUserList())
+            {
+                if(bu is User)
+                {
+                    User u = (User)bu;
+
+                    foreach( var l in u.GetLoans())
+                    {
+                        l.MortagePercent = LoanInterest;
+                    }
+                }
+            }
         }
 
         //Just a quick draft of calculate interest. We should improve it by adding more factors for the calculation, like income size, repaymeny period etc.
@@ -99,7 +120,7 @@ namespace BankingApp.Accounts
         /// <returns>A string containing the size of the loan, the interest rate, and the owner's name.</returns>
         public override string ToString()
         {
-            return $"Loan size: {Size} \nInterest rate: {(LoanInterest * 100).ToString("F2")}\nLoan incl. interest rate: {((LoanInterest + 1) * Size).ToString("F")}\nBorrower: \n{Owner}";
+            return $"Loan size: {Size} \nInterest rate: {(MortagePercent * 100).ToString("F2")}\nLoan incl. interest rate: {((MortagePercent + 1) * Size).ToString("F")}\n\nBorrower: \n{Owner}";
         }
     }
 

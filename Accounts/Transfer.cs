@@ -23,13 +23,17 @@ namespace BankingApp.Accounts
         public DateTime Date { get; set; }
         [JsonIgnore]
         public Account From { get; set; }
-        public decimal FromAccBalance { get; set; }        
+        public decimal FromAccBalance { get; set; }     
+        
+        //This is just to be able to reconstruct the circular reference upon deserialization
         public Guid FromID {  get; set; }
         [JsonIgnore]
         public Account To { get; set; }
         public decimal ToAccBalance { get; set; }
+        //This is just to be able to reconstruct the circular reference upon deserialization
         public Guid ToID { get; set; }
 
+        //Constructor with no params needed for Json Deserialization
         public Transfer()
         {
             TransactionID = Guid.NewGuid();

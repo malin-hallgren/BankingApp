@@ -21,6 +21,7 @@ namespace BankingApp.Users
 
         private static PasswordHasher<BasicUser> Hasher { get; set; } = new PasswordHasher<BasicUser>();
 
+        //Constructor with no params needed for Json Deserialization
         public BasicUser()
         {
 

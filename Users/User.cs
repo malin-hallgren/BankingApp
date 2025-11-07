@@ -20,6 +20,7 @@ namespace BankingApp.Users
         [JsonInclude]
         private decimal Sum;
 
+        //Constructor with no params needed for Json Deserialization
         public User()
         {
             accountList = new List<Account>();
@@ -72,18 +73,18 @@ namespace BankingApp.Users
         {
             if(loanList.Count != 0) 
             { 
-            Console.Clear();
-            Console.WriteLine("\x1b[3J");
+                Console.Clear();
+                Console.WriteLine("\x1b[3J");
 
-            foreach(var l in loanList)
-            {
-                Console.WriteLine($"{l}\n");
-                Console.WriteLine(new string('*', Console.BufferWidth) + "\n");
-            }
+                foreach(var l in loanList)
+                {
+                    Console.WriteLine($"{l}\n");
+                    Console.WriteLine(new string('*', Console.BufferWidth) + "\n");
+                }
             }
             else
             {
-                Console.WriteLine("Congratz! You have no loans yet");
+                OutputHelpers.Highlight("Congratz! You have no loans yet", ConsoleColor.DarkGreen);
             }
         }
         /// <summary>

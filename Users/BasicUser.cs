@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace BankingApp.Users
 {
     // should we make this class abstract?
-    internal class BasicUser
+    internal abstract class BasicUser
     {
         // Properties
         

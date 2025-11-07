@@ -162,12 +162,12 @@ namespace BankingApp.Users
         /// <param name="accountType">The type of account to open. Valid values are "savings" for a savings account or any other value for a
         /// standard account.</param>
         /// <param name="currency">The currency in which the account will be denominated. For example, "USD" for US dollars or "EUR" for euros.</param>
-        public void OpenAccount(string name,AccountType accountType, string currency)
+        public void OpenAccount(string name,AccountType accountType, string currency, int period = 0)
         {
 
             if (accountType == AccountType.Savings)
             {
-                accountList.Add(new SavingsAccount(name,currency, this));
+                accountList.Add(new SavingsAccount(period, name,currency, this));
             }
             else if (accountType == AccountType.Normal)
             {

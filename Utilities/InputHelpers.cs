@@ -36,6 +36,10 @@ namespace BankingApp.Utilities
             }
         }
 
+        /// <summary>
+        /// Returns a valid decimal
+        /// </summary>
+        /// <returns>the valid decimal</returns>
         public static decimal ValidDecimal()
         {
             while (true)

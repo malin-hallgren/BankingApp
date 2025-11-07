@@ -25,7 +25,16 @@ namespace BankingApp.Utilities
         {
             return new Dictionary<string, decimal> (_exchangeRates);
         }
-     
+
+        // Draw currencies with exchange rate
+        public static void DrawFull()
+        {
+            foreach (var pair in _exchangeRates)
+            {
+                Console.WriteLine($"{pair.Key} : {pair.Value}");
+            }
+        }
+
         // Convert currency from -> to
         public static (decimal, decimal) Convert(decimal amount, string fromCurrency, string toCurrency)
         {

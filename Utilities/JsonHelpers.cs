@@ -128,6 +128,13 @@ namespace BankingApp.Utilities
             return toLoad;
         }
 
+        /// <summary>
+        /// Loads dict from a file
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="path">the path to save to</param>
+        /// <returns>the dict to load</returns>
         public static Dictionary<TKey, TValue> LoadDict<TKey, TValue>(string path)
         {
             Dictionary<TKey, TValue> dictToLoadTo = new Dictionary<TKey, TValue>();
@@ -153,6 +160,13 @@ namespace BankingApp.Utilities
             return dictToLoadTo;
         }
 
+        /// <summary>
+        /// Saves a dict to a file
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="path">filepath to save to</param>
+        /// <param name="dictToSave">the dict to save</param>
         public static void SaveDict<TKey, TValue>(string path, Dictionary<TKey, TValue> dictToSave)
         {
             try
@@ -164,6 +178,53 @@ namespace BankingApp.Utilities
             {
                 Console.WriteLine($"Error saving file {path}: {ex.Message}");
             }
+        }
+
+        /// <summary>
+        /// Save a single value
+        /// </summary>
+        /// <param name="path">the path to save to</param>
+        /// <param name="value"></param>
+        public static void SaveValueToFile(string path, decimal value)
+        {
+            try
+            {
+                string json = JsonSerializer.Serialize(value);
+                File.WriteAllText(path, json);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving file {path}: {ex.Message}");
+            }
+        }
+        /// <summary>
+        /// Loads a single value
+        /// </summary>
+        /// <param name="path">the path to the file</param>
+        /// <returns>the value to load</returns>
+        public static decimal LoadValueFromFile(string path)
+        {
+            decimal toLoad = 0;
+
+            try
+            {
+                if (File.Exists(path))
+                {
+                    string json = File.ReadAllText(path) ?? new string("0");
+                    toLoad = JsonSerializer.Deserialize<decimal>(json);
+                }
+                else
+                {
+                    Console.WriteLine($"File {path} not found.\nCreating new {path} containing 0....");
+                    SaveValueToFile(path, toLoad);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"File {path} cannot be read.\nCreating new {path} containing 0....");
+                SaveValueToFile(path, toLoad);
+            }
+            return toLoad;
         }
     }
 }

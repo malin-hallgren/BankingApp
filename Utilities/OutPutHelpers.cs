@@ -54,5 +54,23 @@ namespace BankingApp.Utilities
             Highlight(toHighlight, color);
             Console.Write(second);
         }
+
+        /// <summary>
+        /// Clears the specified amount of lines, standard is 1
+        /// </summary>
+        /// <param name="currentLine">Normally Console.GetCursorPosition.Item2 - 1 (if you are on the row below what you want to clear)</param>
+        /// <param name="amountLines">The amount of lines to clear</param>
+        public static void ClearLines(int currentLine, int amountLines = 1)
+        {
+            Console.CursorVisible = false;
+
+            for (int i = 0; i < amountLines; i++)
+            {
+                Console.SetCursorPosition(0, currentLine - i);
+                Console.Write(new string(' ', Console.BufferWidth));
+            }
+            Console.SetCursorPosition(0, Console.CursorTop);
+            Console.CursorVisible = true;
+        }
     }
 }

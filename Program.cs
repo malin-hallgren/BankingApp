@@ -9,7 +9,6 @@ namespace BankingApp
     {
         static void Main(string[] args)
         {
-            
             BankApp.Startup();
         }
     }

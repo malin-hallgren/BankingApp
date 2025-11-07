@@ -237,7 +237,7 @@ namespace BankingApp.Utilities
             }
 
             Console.WriteLine(new string('_', Console.BufferWidth));
-            Console.WriteLine($"Total amount of money transferred in the bank (In SEK): {TransferSum}");
+            Console.WriteLine($"Total amount of money transferred in the bank (In SEK): {TransferSum.ToString("F2")}");
         }
 
         /// <summary>

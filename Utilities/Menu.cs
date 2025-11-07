@@ -76,7 +76,7 @@ namespace BankingApp.Utilities
                     {
                         selectedIndex = options.Length - 1;
                     }
-                    ClearLines(prevIndex, selectedIndex);
+                    ClearSpecificLines(prevIndex, selectedIndex);
                 }
 
                 else if (keyPressed == ConsoleKey.DownArrow)
@@ -89,7 +89,7 @@ namespace BankingApp.Utilities
                     {
                         selectedIndex = 0;
                     }
-                    ClearLines(prevIndex, selectedIndex);
+                    ClearSpecificLines(prevIndex, selectedIndex);
                 }
             }
 
@@ -98,7 +98,7 @@ namespace BankingApp.Utilities
             return selectedIndex;
         }
 
-        private static void ClearLines(int prev, int current)
+        private static void ClearSpecificLines(int prev, int current)
         {
             Console.SetCursorPosition(0, prev + 2);
             Console.Write(new string(' ', Console.BufferWidth));

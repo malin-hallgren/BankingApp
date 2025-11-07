@@ -222,6 +222,9 @@ namespace BankingApp.Utilities
         /// <param name="user"></param>
         public static void AddToUserList(BasicUser user)
         {
+            // Remove the old version of the user if it exists
+            Users.RemoveAll(u => u.UserName == user.UserName);
+            // Add the updated version  
             Users.Add(user);
             JsonHelpers.SaveList(Users, _filePathUsers);
         }
@@ -385,6 +388,22 @@ namespace BankingApp.Utilities
                 PendingTransfer.Add(transfer);
                 Console.WriteLine($"{toAdd} was added to the Pending Transactions list");
             }
+        }
+        /// <summary>
+        /// Gets a list of all blocked users in the system.
+        /// </summary>
+        /// <returns>An array of blocked users.</returns>
+        public static User[] GetListOfBlockedUsers()
+        {
+            List<User> blockedUsers = new List<User>();
+            foreach (var basicUser in Users)
+            {
+                if (basicUser is User user && user.IsBlocked)
+                {
+                    blockedUsers.Add(user);
+                }
+            }
+            return blockedUsers.ToArray();
         }
     }
 }

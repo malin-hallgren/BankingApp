@@ -27,8 +27,11 @@ namespace BankingApp.Utilities
 
                 else
                 {
-                    Console.WriteLine("Input may not be empty, please make a valid input:");
-                    Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop);
+                    Console.WriteLine("Input may not be empty, Press ENTER to try again:");
+
+                    Console.CursorVisible = false;
+                    Console.ReadLine();
+                    OutputHelpers.ClearLines(Console.GetCursorPosition().Item2 - 2, 2);
                 }
             }
         }
@@ -49,15 +52,7 @@ namespace BankingApp.Utilities
                     Console.WriteLine("Please input a valid number.\nPress ENTER to try again...");
                     Console.ReadLine();
 
-                    Console.SetCursorPosition(0, 1);
-                    Console.Write(new string(' ', Console.BufferWidth));
-                    Console.SetCursorPosition(0, 2);
-                    Console.Write(new string(' ', Console.BufferWidth));
-                    Console.SetCursorPosition(0, 3);
-                    Console.Write(new string(' ', Console.BufferWidth));
-
-                    Console.SetCursorPosition(0, 1);
-                    Console.CursorVisible = true;
+                    OutputHelpers.ClearLines(Console.GetCursorPosition().Item2 - 1, 4);
 
                 }
             }

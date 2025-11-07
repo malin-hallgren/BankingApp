@@ -9,7 +9,12 @@ namespace BankingApp
     {
         static void Main(string[] args)
         {
-            
+
+            //Console.WriteLine("Line1\nLine2\nLine3");
+
+            //OutputHelpers.ClearLines(Console.GetCursorPosition().Item2 - 1, 2);
+            //Console.ReadLine();
+
             BankApp.Startup();
         }
     }

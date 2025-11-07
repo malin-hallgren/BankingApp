@@ -91,7 +91,7 @@ namespace BankingApp.UI
             Console.Clear();
             Console.WriteLine("Enter deposit amount:");
             acc.Deposit(InputHelpers.ValidDecimal());
-            Console.WriteLine("Deposit succeeded!");
+            OutputHelpers.Highlight("Deposit succeeded!", ConsoleColor.DarkGreen);
         }
 
         /// <summary>

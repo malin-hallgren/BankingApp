@@ -73,7 +73,6 @@ namespace BankingApp.UI
                         if (userToUnblock != null)
                         {
                             userToUnblock.IsBlocked = false;
-                            // Update the user in the list
                             BankApp.AddToUserList(userToUnblock);
                             Console.WriteLine($"User {userToUnblock.Name} has been unblocked.");
                         }
@@ -106,6 +105,10 @@ namespace BankingApp.UI
             ConvertCurrencies.setRate(currency, newRate);
         }
 
+        /// <summary>
+        /// Allows the admin to select a blocked user to unblock from a list of blocked users.
+        /// </summary>
+        /// <returns>The username of the user to unblock.</returns>
         public static string UnblockUser()
         {
             string prompt = "Which user do you wish to unblock?";

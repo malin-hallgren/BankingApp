@@ -43,15 +43,18 @@ namespace BankingApp.UI
                     Menu.ReturnToStart();
                     return true;
                 case 2:
-                    Console.WriteLine("Update Currencies - Coming soon!");
+                    UpdateCurrencyUI();
+                    Console.Clear();
+                    Console.WriteLine("New Exchannge Rates:");
+                    ConvertCurrencies.DrawFull();
+                    Console.WriteLine("\nPress Enter to return to menu");
                     Menu.ReturnToStart();
                     return true;
                 case 3:
                     Console.WriteLine("Input new interest");
                     var input = InputHelpers.ValidDecimal()/100;
-                    //admin.UpdateInterestForAllLoans(BankApp.GetUserList(), input);
-                    Loan.AdminUpdateInterest(input);
-                   
+
+                    Admin.UpdateInterest(input);
                     Menu.ReturnToStart();
                     return true;
                 case 4:
@@ -64,7 +67,20 @@ namespace BankingApp.UI
                 default:
                     return true;
             }
+        }
 
-        }    
+        public static void UpdateCurrencyUI()
+        {
+            string prompt = "Choose currency to edit from the list";
+            string[] option = ConvertCurrencies.GetDictionary().Keys.ToArray();
+            
+            int selectedIndex = Menu.Run(option, prompt);
+
+            Console.Write($"Set new value for {option[selectedIndex]}: ");
+            string currency = option[selectedIndex].ToString();
+            decimal newRate = InputHelpers.ValidDecimal();
+
+            ConvertCurrencies.setRate(currency, newRate);
+        }
     }
 }

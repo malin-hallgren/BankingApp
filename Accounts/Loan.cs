@@ -15,12 +15,12 @@ namespace BankingApp.Accounts
     internal class Loan
     {
         public decimal Size { get; set; }
-        private static decimal LoanInterest { get; set; } //This is global for ALL loans
+        
         [JsonInclude]
         private decimal LoanInclInterest { get; set; }
         [JsonIgnore]
         public User Owner { get; set; }
-        public decimal MortagePercent { get; set; } //this is local for an individual loan
+        public decimal EffectiveInterest { get; set; } //this is local for an individual loan
 
         //Constructor with no params needed for Json Deserialization
         public Loan()
@@ -57,54 +57,35 @@ namespace BankingApp.Accounts
 
             Size = size;
             Owner = owner;
-            LoanInterest = CalculateInterest(size);
-            MortagePercent = LoanInterest;
-            LoanInclInterest = Size + Size * LoanInterest;
+            EffectiveInterest = CalculateInterest(size);
+            LoanInclInterest = Size + Size * EffectiveInterest;
         }
-
-        public static void AdminUpdateInterest(decimal interest)
-        {
-            LoanInterest = interest;
-
-            foreach (var bu in BankApp.GetUserList())
-            {
-                if(bu is User)
-                {
-                    User u = (User)bu;
-
-                    foreach( var l in u.GetLoans())
-                    {
-                        l.MortagePercent = LoanInterest;
-                    }
-                }
-            }
-        }
-
-        //Just a quick draft of calculate interest. We should improve it by adding more factors for the calculation, like income size, repaymeny period etc.
 
         /// <summary>
         /// Decides interest depending on the size of the Loan
         /// </summary>
-        /// <param name="loan"> Size of loan</param>
-        private static decimal CalculateInterest(decimal loan)
+        /// <param name="loanSize"> Size of loan</param>
+        private static decimal CalculateInterest(decimal loanSize)
         {
+            decimal baseRate = BankApp.GetBaseRateLoan();
+
             // Maybe implement an Enum for different loan sizes instead of using hardcoded values
             // Show different interest rates depending on the size of the loan to the user before accepting the loan
-            if (loan < 1000000)
+            if (loanSize < 1000000)
             {
-                return 0.042m;
+                return baseRate;
             }
-            else if (loan > 1000000 && loan < 3000000)
+            else if (loanSize > 1000000 && loanSize < 3000000)
             {
-                return 0.039m;
+                return baseRate - 0.0025m;
             }
-            else if (loan > 3000000 && loan < 5000000)
+            else if (loanSize > 3000000 && loanSize < 5000000)
             {
-                return 0.032m;
+                return baseRate - 0.0032m;
             }
             else
             {
-                return 0.025m;
+                return baseRate - 0.0039m;
             }
         }
 
@@ -120,7 +101,7 @@ namespace BankingApp.Accounts
         /// <returns>A string containing the size of the loan, the interest rate, and the owner's name.</returns>
         public override string ToString()
         {
-            return $"Loan size: {Size} \nInterest rate: {(MortagePercent * 100).ToString("F2")}\nLoan incl. interest rate: {((MortagePercent + 1) * Size).ToString("F")}\n\nBorrower: \n{Owner}";
+            return $"Loan size: {Size} \nInterest rate: {(EffectiveInterest * 100).ToString("F2")}\nLoan incl. interest rate: {((EffectiveInterest + 1) * Size).ToString("F")}\n\nBorrower: \n{Owner}";
         }
     }
 

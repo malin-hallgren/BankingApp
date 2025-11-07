@@ -21,7 +21,7 @@ namespace BankingApp.UI
                 "Print Loans",
                 "Request Loan",
                 "Open Account",
-                "Deposit",
+                "Deposit Money",
                 "Log out"
             };
 
@@ -53,21 +53,21 @@ namespace BankingApp.UI
                     Menu.ReturnToStart();
                     return true;
                 case 5:
-                    AccountType accountType = CustomerAccount.ChooseAccountType();
-                    string currency = CustomerAccount.ChooseCurrency();
+                    AccountType accountType = ChooseAccountType();
+                    string currency = ChooseCurrency();
                     Console.WriteLine("Enter account name:");
-                    string accName = InputHelpers.ValidString();
-                    user.OpenAccount(accName, accountType, currency);
-                    Console.WriteLine($"Created {accountType} account with {currency} currency.");
+                    string accountName = InputHelpers.ValidString();
+                    if (accountType == AccountType.Savings)
+                    {
+                        user.OpenAccount( accountName, accountType, currency, ChooseSavingsPeriod());
+                    }
+                    else
+                    {
+                        user.OpenAccount(accountName, accountType, currency);
+                    }
+                    Console.WriteLine($"\n{accountType} account created with {currency} currency.");
                     Menu.ReturnToStart();
                     return true;
-                //case 4:
-                //      AccountType accountType = CustomerAccount.ChooseAccountType();
-                //      string currency = CustomerAccount.ChooseCurrency();
-                //      user.OpenAccount(accountType, currency);
-                //      Console.WriteLine($"\n{accountType} account created with {currency} currency.");
-                //      Menu.ReturnToStart();
-                //      return true;
                 case 6:
                     DepositAmount(user);
                     Menu.ReturnToStart();
@@ -125,6 +125,53 @@ namespace BankingApp.UI
                 OutputHelpers.Highlight("Loan request cancelled.", ConsoleColor.DarkRed);
             }
         }
+
+        public static AccountType ChooseAccountType()
+        {
+            string prompt = "Which type of Account do you wish to open?";
+            string[] options =
+            {
+                "Normal",
+                "Savings"                
+            };
+
+            int selectedIndex = Menu.Run(options, prompt);
+
+            if (selectedIndex == 0)
+            {
+                Console.WriteLine("Creating normal account");
+                return AccountType.Normal;
+            }
+            else if (selectedIndex == 1)
+            {
+                Console.WriteLine("Creating savings account");
+                return AccountType.Savings;
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("Something has gone very wrong...");
+                return AccountType.Error;
+            }
+        }
+
+        public static string ChooseCurrency()
+        {
+            int numberOfKeys = ConvertCurrencies.GetDictionary().Count;
+            string prompt = "Which currency do you wish to use for your account?";
+            string[] options = ConvertCurrencies.GetDictionary().Keys.ToArray();
+            int selectedIndex = Menu.Run(options, prompt);
+            return options[selectedIndex];
+        }
+
+        private static int ChooseSavingsPeriod()
+        {
+            string prompt = "Choose between the different timeperiods OBS! your money will not be accessible during this time";
+            int[] options = SavingsAccount.GetTimePeriodList();
+            string[] strings = Array.ConvertAll(options, x => x.ToString());
+            int selectedIndex = Menu.Run(strings, prompt);
+            return options[selectedIndex];          
+        } 
     }
 }
 

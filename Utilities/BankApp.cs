@@ -19,8 +19,8 @@ namespace BankingApp.Utilities
         private static readonly string _filePathUsers = "BasicUserList.json";
         private static List<BasicUser> Users = new List<BasicUser>();
         private static List<Transfer> PendingTransfer = new List<Transfer>();
-        public static int Interval { get; private set; } = 1;
-        private static System.Timers.Timer _transferTimer = new System.Timers.Timer(Interval * 60000/10);
+        public static int Interval { get; private set; } = 1; //Reminder set to 15!
+        private static System.Timers.Timer _transferTimer = new System.Timers.Timer(Interval * 60000/10); //Reminder remove /10
         private static readonly object _pendingLock = new object();
         private static PasswordHasher<BasicUser> Hasher {  get; set; } = new PasswordHasher<BasicUser>();
 
@@ -31,6 +31,8 @@ namespace BankingApp.Utilities
         private static decimal TransferSum;
         public static bool IsRunning { get; private set; }
 
+        private static readonly string _filePathLoanRates = "LoanRate.json";
+        private static decimal BaseRateLoan { get; set; }
 
         /// <summary>
         /// Sets variables at their start state, loads needed files
@@ -148,19 +150,15 @@ namespace BankingApp.Utilities
                 }
             }
 
-            if (File.Exists(_filPathSum))
-            {
-                string json = File.ReadAllText(_filPathSum) ?? new string("0");
-                TransferSum = JsonSerializer.Deserialize<decimal>(json);
-            }
-            else
-            {
-                TransferSum = 0;
-                string json = TransferSum.ToString();
-                json = JsonSerializer.Serialize(TransferSum);
-                File.WriteAllText(_filPathSum, json);
-            }
+            TransferSum = JsonHelpers.LoadValueFromFile(_filPathSum);
 
+            BaseRateLoan = JsonHelpers.LoadValueFromFile(_filePathLoanRates);
+
+            if (BaseRateLoan < 0.001m)
+            {
+                BaseRateLoan += 0.001m;
+                JsonHelpers.SaveValueToFile(_filePathLoanRates, BaseRateLoan);
+            }
             if (!Users.Exists(x => x.GetType() == typeof(Admin)))
             {
                 Console.WriteLine("No Admin exists, standard admin user generated. Please set a new password below:");
@@ -185,6 +183,26 @@ namespace BankingApp.Utilities
             AsciiHelpers.PrintAscii(AsciiHelpers.LogoPath);
             Console.WriteLine("Thank you for using *REDACTED* Bank! We look forward to your next visit!");
             Environment.Exit(0);
+        }
+
+        /// <summary>
+        /// Gets BaseRateLoan
+        /// </summary>
+        /// <returns>a copy of Base Rates for loans</returns>
+        public static decimal GetBaseRateLoan()
+        {
+            decimal temp = BaseRateLoan;
+            return temp;
+        }
+
+        /// <summary>
+        /// sets a new Base Rate for loans
+        /// </summary>
+        /// <param name="newRate">the new rate</param>
+        public static void SetBaseRateLoan(decimal newRate)
+        {
+            BaseRateLoan = newRate;
+            JsonHelpers.SaveValueToFile(_filePathLoanRates, newRate);
         }
 
         /// <summary>
@@ -221,6 +239,19 @@ namespace BankingApp.Utilities
             }
         }
 
+
+        /// <summary>
+        /// Adds to the PendingTransfers list
+        /// </summary>
+        /// <param name="transfer">The transfer to add to the list</param>
+        public static void AddToTransferList(Transfer transfer)
+        {
+            lock (_pendingLock)
+            {
+                PendingTransfer.Add(transfer);
+            }
+        }
+
         /// <summary>
         /// Prints statistics (transfers and the sum of them all)
         /// </summary>
@@ -238,18 +269,6 @@ namespace BankingApp.Utilities
 
             Console.WriteLine(new string('_', Console.BufferWidth));
             Console.WriteLine($"Total amount of money transferred in the bank (In SEK): {TransferSum.ToString("F2")}");
-        }
-
-        /// <summary>
-        /// Adds to the PendingTransfers list
-        /// </summary>
-        /// <param name="transfer">The transfer to add to the list</param>
-        public static void AddToTransferList(Transfer transfer)
-        {
-            lock (_pendingLock)
-            {
-                PendingTransfer.Add(transfer);
-            }
         }
 
         /// <summary>
@@ -284,6 +303,7 @@ namespace BankingApp.Utilities
 
                         
                         TransferSum += transfer.AmountInSEK;
+
                         string json = TransferSum.ToString();
                         json = JsonSerializer.Serialize(TransferSum);
                         File.WriteAllText(_filPathSum, json);

@@ -10,8 +10,7 @@ namespace BankingApp.UI
 {
     internal class CustomerAccount
     {
-        public static AccountType
-         ChooseAccountType()
+        public static AccountType ChooseAccountType()
         {
             string prompt = "Which type of Account do you wish to open?";
             string[] options =
@@ -48,6 +47,5 @@ namespace BankingApp.UI
             int selectedIndex = Menu.Run(options, prompt);
             return options[selectedIndex];
         }
-
     }
 }

@@ -74,8 +74,8 @@ namespace BankingApp.UI
                 case 7:
                     Console.WriteLine("Update user information");
                     EditInfo(user);
-                    Menu.ReturnToLogin();
-                    return false;
+                    Menu.ReturnToStart();
+                    return true;
                 case 8:
                     Menu.ReturnToLogin();
                     return false;

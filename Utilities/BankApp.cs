@@ -19,8 +19,8 @@ namespace BankingApp.Utilities
         private static readonly string _filePathUsers = "BasicUserList.json";
         private static List<BasicUser> Users = new List<BasicUser>();
         private static List<Transfer> PendingTransfer = new List<Transfer>();
-        public static int Interval { get; private set; } = 1; //Reminder set to 15!
-        private static System.Timers.Timer _transferTimer = new System.Timers.Timer(Interval * 60000/10); //Reminder remove /10
+        public static int Interval { get; private set; } = 15;
+        private static System.Timers.Timer _transferTimer = new System.Timers.Timer(Interval * 60000);
         private static readonly object _pendingLock = new object();
         private static PasswordHasher<BasicUser> Hasher {  get; set; } = new PasswordHasher<BasicUser>();
 

@@ -13,41 +13,29 @@ BankingApp is a console-based application build in C#.
 - A simple UI menu for navigation
 
 ## Architecture
-
 BankingApp
-    - Accounts
-        - Account.cs -base model for bank accounts
-        
-BankingApp
-    |-- Accounts
-    |   |-- Account.cs - Base model for bank accounts
-    |   |-- Loan.cs - Represents a loan
-    |   |-- SavingsAccount.cs - Account specialization with interest handling
-    |   |-- Transfer.cs - Encapsulates a money transfer between accounts
-    |
-    |-- UI
-    |   |-- AdminUI.cs - Admin menu flow
-    |   |-- CustomerUI.cs - Customer menu flow
-    |   |-- Login.cs - Authentication flow
-    |   |-- CustomerAccount.cs - Account Type selection flow
-    |
-    |-- Users
-    |   |-- BasicUser.cs - Base user entity
-    |   |-- Admin.cs - Admin user
-    |   |-- User.cs - Customer user
-    |
-    |-- Utilities
-        |-- Enums
-        |   |-- AccountType.cs - Supported account types
-        |
-        |-- AsciiHelper.cs - Renders Ascii art/logo
-        |-- BankApp.cs - Handles global variables and lists for appwide data
-        |-- ConvertCurrencies.cs - Handles currencies and conversion rates
-        |-- InputHelpers.cs - Handles inputs (String, Decimal, Password)
-        |-- JsonHelper.cs - Handles settings for saving and loading files
-        |-- Logo.txt - Ascii art bank logo
-        |-- Menu.cs - Renders and handles menu logic 
-        |-- OutputHelpers.cs - Handles output and formatting 
+    |- Accounts\
+    |   |- Account.cs - Base model for bank accounts\
+    |   |- Loan.cs - Represents a loan\
+    |   |- SavingsAccount.cs - Account specialization with interest handling\
+    |   |- Transfer.cs - Encapsulates a money transfer between accounts\
+    |- UI\
+    |   |- AdminUI.cs - Admin menu flow\
+    |   |- CustomerUI.cs - Customer menu flow\
+    |   |- Login.cs - Authentication flow\
+    |- Users\
+    |   |- BasicUser.cs - Base user entity\
+    |   |- Admin.cs - Admin user\
+    |   |- User.cs - Customer user\
+    |- Utilities\
+        |- Enums\
+        |   |- AccountType.cs - Supported account types\
+        |- AsciiHelper.cs - Renders Ascii art/logo\
+        |- ConvertCurrencies.cs - Handles currencies and conversion rates\
+        |- InputHelpers.cs - Handles inputs (String, Decimal, Password)\
+        |- JsonHelper.cs - Handles settings for saving and loading files\
+        |- Menu.cs - Renders and handles menu logic\
+        |- OutputHelpers.cs - Handles output and formatting\ 
 
 ## Setup & Run
 
@@ -71,6 +59,4 @@ BankingApp
 - Geovanni Medina Herrera
 - Anton Grönqvist
 
-
-## usage
 

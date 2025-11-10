@@ -24,6 +24,7 @@ namespace BankingApp.UI
                 "Display all users",
                 "Update currencies",
                 "Update Interest Rates",
+                "Unblock User",
                 "Show Bank Data",
                 "Log out"
             };
@@ -58,10 +59,31 @@ namespace BankingApp.UI
                     Menu.ReturnToStart();
                     return true;
                 case 4:
-                    BankApp.PrintStatistics();
+                    User[] blockedUsers = BankApp.GetListOfBlockedUsers();
+                    if (blockedUsers.Length == 0)
+                    {
+                        Console.WriteLine("No blocked users found.");
+                        Menu.ReturnToStart();
+                        return true;
+                    }
+                    string userNameToUnblock = UnblockUser();
+                    if (!string.IsNullOrEmpty(userNameToUnblock))
+                    {
+                        User userToUnblock = blockedUsers.FirstOrDefault(u => u.Name == userNameToUnblock);
+                        if (userToUnblock != null)
+                        {
+                            userToUnblock.IsBlocked = false;
+                            BankApp.AddToUserList(userToUnblock);
+                            Console.WriteLine($"User {userToUnblock.Name} has been unblocked.");
+                        }
+                    }
                     Menu.ReturnToStart();
                     return true;
                 case 5:
+                    BankApp.PrintStatistics();
+                    Menu.ReturnToStart();
+                    return true;
+                case 6:
                     Menu.ReturnToLogin();
                     return false;
                 default:
@@ -81,6 +103,28 @@ namespace BankingApp.UI
             decimal newRate = InputHelpers.ValidDecimal();
 
             ConvertCurrencies.setRate(currency, newRate);
+        }
+
+        /// <summary>
+        /// Allows the admin to select a blocked user to unblock from a list of blocked users.
+        /// </summary>
+        /// <returns>The username of the user to unblock.</returns>
+        public static string UnblockUser()
+        {
+            string prompt = "Which user do you wish to unblock?";
+            User[] blockedUsers = BankApp.GetListOfBlockedUsers();
+
+            // Create an array with usernames for the menu
+            string[] options = blockedUsers.Select(u => u.Name).ToArray();
+
+            if (options.Length == 0)
+            {
+                Console.WriteLine("No blocked users found.");
+                return string.Empty;
+            }
+
+            int selectedIndex = Menu.Run(options, prompt);
+            return options[selectedIndex];
         }
     }
 }

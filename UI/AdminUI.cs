@@ -73,7 +73,6 @@ namespace BankingApp.UI
                         if (userToUnblock != null)
                         {
                             userToUnblock.IsBlocked = false;
-                            BankApp.AddToUserList(userToUnblock);
                             Console.WriteLine($"User {userToUnblock.Name} has been unblocked.");
                         }
                     }

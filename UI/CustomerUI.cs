@@ -2,8 +2,6 @@
 using BankingApp.Users;
 using BankingApp.Utilities;
 using BankingApp.Utilities.Enums;
-using System;
-using System.Linq;
 
 namespace BankingApp.UI
 {
@@ -22,6 +20,7 @@ namespace BankingApp.UI
                 "Request Loan",
                 "Open Account",
                 "Deposit Money",
+                "Update Personal Information",
                 "Log out"
             };
 
@@ -73,11 +72,54 @@ namespace BankingApp.UI
                     Menu.ReturnToStart();
                     return true;
                 case 7:
+                    Console.WriteLine("Update user information");
+                    EditInfo(user);
+                    Menu.ReturnToStart();
+                    return true;
+                case 8:
                     Menu.ReturnToLogin();
                     return false;
                 default:
                     // If error somehow
                     return true;
+            }
+        }
+
+        private static void EditInfo(User user)
+        {
+            string prompt = "Choose field to edit:";
+            string[] options =
+            {
+                $"Name: {user.Name}",
+                $"Phone number: {user.PhoneNumber}",
+                $"Email address: {user.EmailAddress}",
+            };
+            int selectedIndex = Menu.Run(options, prompt);
+            Console.Clear();
+
+            if (selectedIndex == 0 )
+            {
+                Console.WriteLine("Enter new name:");
+                string newName = Console.ReadLine();
+                user.Name = newName;
+                Console.Clear();
+                Console.WriteLine($"New name: {user.Name}.");
+            }
+            else if (selectedIndex == 1)
+            {
+                Console.WriteLine("Enter new phone number:");
+                string newPhoneNumber = Console.ReadLine();
+                user.PhoneNumber = newPhoneNumber;
+                Console.Clear();
+                Console.WriteLine($"New phone number: {user.PhoneNumber}.");
+            }
+            else if (selectedIndex == 2)
+            {
+                Console.WriteLine("Enter new email address:");
+                string newEmailAddress = Console.ReadLine();
+                user.EmailAddress = newEmailAddress;
+                Console.Clear();
+                Console.WriteLine($"New email address: {user.EmailAddress}.");
             }
         }
 

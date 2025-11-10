@@ -222,9 +222,6 @@ namespace BankingApp.Utilities
         /// <param name="user"></param>
         public static void AddToUserList(BasicUser user)
         {
-            // Remove the old version of the user if it exists
-            Users.RemoveAll(u => u.UserName == user.UserName);
-            // Add the updated version  
             Users.Add(user);
             JsonHelpers.SaveList(Users, _filePathUsers);
         }

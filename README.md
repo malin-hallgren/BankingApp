@@ -13,6 +13,11 @@ BankingApp is a console-based application build in C#.
 - A simple UI menu for navigation
 
 ## Architecture
+
+BankingApp
+    - Accounts
+        - Account.cs -base model for bank accounts
+        
 BankingApp
     |-- Accounts
     |   |-- Account.cs - Base model for bank accounts
@@ -62,9 +67,9 @@ BankingApp
 
 ## Authors
 - Malin Hallgren
-- Andrés Llano Duran
+- AndrÃ©s Llano Duran
 - Geovanni Medina Herrera
-- Anton Grönqvist
+- Anton GrÃ¶nqvist
 
 
 ## usage
